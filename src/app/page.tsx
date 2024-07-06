@@ -10,7 +10,8 @@ export default function Home() {
     description: '',
     image: '',
     price: '0',
-    actionTitle: ''
+    actionTitle: '',
+    walletAddress: ''
   })
 
 
@@ -24,18 +25,17 @@ export default function Home() {
       image: actions.image,
       price: actions.price,
       actionTitle: `${actions.actionTitle} ${actions.price} SOL`,
-      actionUrl: ``
+      actionUrl: ``,
+      walletAddress: actions.walletAddress,
     }
 
     setBlinkLink(`https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
   }
 
-
-  console.log(actions);
   return (
     <div className="flex flex-col justify-start items-center py-10 ">
 
-      <h2 className="font-bold text-[40px] mb-10">Create Blinks With a Click</h2>
+      <h2 className="font-bold text-[40px] mb-10 w-10/12 text-center">Create Blinks With a Click</h2>
 
       <div className="w-10/12 md:w-5/12 m-auto  gap-y-2 items-center">
 
@@ -67,13 +67,18 @@ export default function Home() {
           <label htmlFor="" className="mb-1 ps-2">Enter Action Label</label>
           <input onChange={(e) => setActions({ ...actions, actionTitle: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="Amount to Receive" />
         </div>
+
+        <div className="mb-5 flex flex-col">
+          <label htmlFor="" className="mb-1 ps-2">Enter Wallet Address</label>
+          <input onChange={(e) => setActions({ ...actions, walletAddress: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="Enter your wallet address" />
+        </div>
         <div>
           <button onClick={() => UploadBlink()} className="rounded-xl bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Add Action</button>
         </div>
 
         {
-          blinkLink !== '' && <div className="mt-5">
-            <a href={blinkLink} target="_blank">Visit Blink Link</a>
+          blinkLink !== '' && <div className="mt-5 w-full">
+            <a href={blinkLink} className="rounded-xl bg-yellow-400 py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto" target="_blank">Click to Visit Blink Link</a>
           </div>
         }
       </div>

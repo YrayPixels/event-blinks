@@ -77,7 +77,8 @@ export default function Home() {
         </div>
 
         {
-          blinkLink !== '' && <div className="mt-5 w-full">
+          blinkLink !== '' &&
+          <div className="mt-5 w-full justify-center items-center flex flex-row">
             <a href={blinkLink} className="rounded-xl bg-yellow-400 py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto" target="_blank">Click to Visit Blink Link</a>
           </div>
         }

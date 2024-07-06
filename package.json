@@ -12,6 +12,7 @@
     "@solana/actions": "^1.1.1",
     "@solana/web3.js": "^1.94.0",
     "next": "14.2.4",
+    "next-cloudinary": "^6.6.2",
     "react": "^18",
     "react-dom": "^18"
   },

@@ -5,31 +5,41 @@ export const GET = (req: Request) => {
 
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
+    const create = params.get('create') || "{}";
 
-    // Accessing parameters from the request
-    const title = params.get('title') || "NFT";
-    const description = params.get('description') || "Mint this NFT";
-    const amount = params.get('amount');
+    if (create === undefined) {
+        return Response.json({ message: "No create parameter found" }, { headers: ACTIONS_CORS_HEADERS })
+    }
+
+    let decoded = decodeURIComponent(create);
+    let item = JSON.parse(decoded);
 
 
     const payload: ActionGetResponse = {
 
-        icon: new URL("/nft.avif", url.origin).toString(),
-        /** describes the source of the action request */
-        title: title,
-        /** brief summary of the action to be performed */
-        description: description,
-        /** button text rendered to the user */
-        label: `Mint ${amount} SOL `,
+        icon: new URL(item.image, url.origin).toString(),
+        title: item.title,
+        description: item.description,
+        label: `Mint ${item.price} SOL `,
+        links: {
+            actions: [
+                {
+                    href: `https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=${create}`,
+                    label: `Mint ${item.price} SOL`
+                },
+                {
+                    href: `https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=${create}`,
+                    label: `Donate ${item.price} SOL`
+                }
+            ]
+
+        }
+
     }
     return Response.json(payload, { headers: ACTIONS_CORS_HEADERS })
 }
-
 export const OPTIONS = GET;
 
 export const POST = (req: Request) => {
-
-
     return Response.json({ message: "POST request received" }, { headers: ACTIONS_CORS_HEADERS })
-
 }

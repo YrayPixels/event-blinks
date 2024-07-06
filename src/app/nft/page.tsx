@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image";
 
 export const mockNFTs = [
@@ -43,6 +45,27 @@ export const mockNFTs = [
 ]
 export default function Home() {
     let item = mockNFTs[0];
+
+    const createDialect = async () => {
+
+        // Example JSON object
+        const jsonObject = {
+            title: item.title,
+            description: item.description,
+            image: item.image,
+            price: item.price
+        };
+
+        // Convert the JSON object to a string
+        const jsonString = JSON.stringify(jsonObject);
+
+        // URL encode the JSON string
+        const urlEncodedString = encodeURIComponent(jsonString);
+
+        console.log(urlEncodedString);
+
+        window.location.href = 'https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=' + urlEncodedString;
+    }
     return (
         <div className="flex flex-col justify-start items-center ">
 
@@ -87,13 +110,8 @@ export default function Home() {
 
                         </div>
 
-                        <div className="text-wrap w-full p-2 rounded overflow-hidden">
-                            <p>{${`https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?description=${encodeURIComponent(item.description)}&title=${encodeURIComponent(item.title)}&amount=${item.price}`}}
-                            </p>
-                        </div>
-
                         <div className="justify-center basis-1/4 items-center flex flex-row ">
-                            <a target="_blank" href={`https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?description=${encodeURIComponent(item.description)}&title=${encodeURIComponent(item.title)}&amount=${item.price}`} className="rounded-xl bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Mint Here</a>
+                            <button onClick={() => createDialect()} className="rounded-xl bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Mint Here</button>
                         </div>
                     </div>
                 </div>

@@ -1,87 +1,58 @@
+"use client";
 import Image from "next/image";
+import { useState } from "react";
 
-let mockNFTs = [
 
-  {
-    title: "NFT 1",
-    description: "This is the first NFT",
-    image: "/nft.avif",
-    price: 1
-  },
-  {
-    title: "NFT 2",
-    description: "This is the second NFT",
-    image: "/nft.avif",
-    price: 2
-  },
-  {
-    title: "NFT 3",
-    description: "This is the third NFT",
-    image: "/nft.avif",
-    price: 3
-
-  },
-  {
-    title: "NFT 1",
-    description: "This is the first NFT",
-    image: "/nft.avif",
-    price: 1
-  },
-  {
-    title: "NFT 2",
-    description: "This is the second NFT",
-    image: "/nft.avif",
-    price: 2
-  },
-  {
-    title: "NFT 3",
-    description: "This is the third NFT",
-    image: "/nft.avif",
-    price: 3
-
-  }
-]
 export default function Home() {
+
+  const [actions, setActions] = useState([])
   return (
-    <div className="flex flex-col justify-start items-center ">
+    <div className="flex flex-col justify-start items-center py-10 ">
 
-      <h2 className="font-bold text-[40px] mb-10">Mint & Sell Your NFT's in one click with Blink</h2>
+      <h2 className="font-bold text-[40px] mb-10">Create Blinks With a Click</h2>
 
-      <div className="w-10/12 m-auto grid grid-cols-4 gap-4 items-center">
-        {
-          mockNFTs.map((item, index) => {
-            return (
-              <div className="space-y-4 p-3 backdrop-blur-sm bg-[#1c1326] rounded-xl">
-                <div className="rounded-xl overflow-hidden ">
-                  <Image src={item.image} alt={item.title} style={{ objectFit: "cover" }} height={200} width={500} />
-                </div>
-                <div>
-                  <div className="font-bold">{item.title}</div>
-                  <div className="text-[16px]" >{item.description}</div>
-                </div>
+      <div className="w-10/12 md:w-5/12 m-auto  gap-y-2 items-center">
 
-                <div className="flex flex-row justify-between">
-                  <div>
-                    <div className="text-white text-[16px]">Price</div>
-                    <div className="text-[#59E4C0] font-bold text-[16px]">{item.price} SOL</div>
-                  </div>
-                  <div>
-                    <div className="text-white text-[16px]">Items</div>
-                    <div className="text-[#59E4C0] font-bold text-[16px]">156.6k</div>
-                  </div>
-                  <div>
-                    <div className="text-white text-[16px]">Minted</div>
-                    <div className="text-[#59E4C0] font-bold text-[16px]">4</div>
-                  </div>
+        <div className="mb-3 flex flex-col">
+          <label htmlFor="" className="mb-1 ps-2">Kinldy Select from the list of actions</label>
+          <select name="" id="" className="p-2 rounded-lg bg-white/20">
+            <option value="Receive">Receive/Donate</option>
+          </select>
+        </div>
+        <div className="mb-3 flex flex-col">
+          <label htmlFor="" className="mb-1 ps-2">What's your Blink Name</label>
+          <input type="text" className="p-2 rounded-lg bg-white/20" placeholder="enter name of your blink, it can be your name" />
+        </div>
 
-                </div>
-                <div className="justify-center items-center flex flex-row ">
-                  <a href="/nft" className="rounded-xl bg-[#59E4C0] text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Mint NFT's</a>
-                </div>
+        <div className="mb-3 flex flex-col">
+          <label htmlFor="" className="mb-1 ps-2">What does your Blink Do!</label>
+          <textarea className="p-2 rounded-lg bg-white/20" placeholder="describe your blink for users"></textarea>
+        </div>
+
+        <div className="mb-3 flex flex-col">
+          <label htmlFor="" className="mb-1 ps-2">Blink Image</label>
+          <input type="file" className="p-2 rounded-lg bg-white/20" />
+        </div>
+
+        <div>
+          <button onClick={() => { }} className="rounded-xl bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Add Action</button>
+
+        </div>
+        {actions.map((action, index) => {
+          return (
+            <>
+              <div className="mb-3 flex flex-col">
+                <>
+                </>
               </div>
-            )
-          })
-        }
+            </>
+          )
+        })}
+        <div className="mb-3 flex flex-col">
+          <label htmlFor="" className="mb-1 ps-2"></label>
+          <textarea className="p-2 rounded-lg bg-white/20" placeholder="describe your blink for users"></textarea>
+        </div>
+
       </div>
 
     </div>

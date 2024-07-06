@@ -17,7 +17,17 @@ export default function Home() {
 
   const [blinkLink, setBlinkLink] = useState('')
 
+
+
   const UploadBlink = async () => {
+
+
+    let actionLinkJson = {
+      link: 'https://create-actions.vercel.app/api/actions/mint',
+      walletAddress: actions.walletAddress,
+      price: actions.price
+    }
+
 
     let blinkJson = {
       title: actions.title,
@@ -25,11 +35,15 @@ export default function Home() {
       image: actions.image,
       price: actions.price,
       actionTitle: `${actions.actionTitle} ${actions.price} SOL`,
-      actionUrl: ``,
+      actionUrl: `http://localhost:3000/api/actions/mint?send=${encodeURIComponent(JSON.stringify(actionLinkJson))}`,
       walletAddress: actions.walletAddress,
     }
 
-    setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
+    // setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
+
+    setBlinkLink(`https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
+    console.log(blinkJson.actionUrl)
+
   }
 
   return (

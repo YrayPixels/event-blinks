@@ -41,10 +41,13 @@ export const POST = async (req: Request) => {
 
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
-    const walletAddressReq = params.get('walletAddress') || "";
+
+    const send: any = params.get('send') || "{walletAddressReq: '' , price: 0}";
+    let decoded = decodeURIComponent(send);
+    let item = JSON.parse(decoded);
     const amount = params.get('amount') || 0;
 
-    if (walletAddressReq === '') {
+    if (item.walletAddress === '') {
         return Response.json({ message: "No wallet address found" }, { headers: ACTIONS_CORS_HEADERS })
     }
 
@@ -52,10 +55,10 @@ export const POST = async (req: Request) => {
 
         const body: ActionPostRequest = await req.json();
 
-        let walletAddress = new PublicKey(walletAddressReq);
+        let walletAddress = new PublicKey(item.walletAddress);
 
 
-        const lamportsToSend = Number(amount) * LAMPORTS_PER_SOL;
+        const lamportsToSend = Number(item.price) * LAMPORTS_PER_SOL;
 
         const transferTransaction = new Transaction().add(
             SystemProgram.transfer({

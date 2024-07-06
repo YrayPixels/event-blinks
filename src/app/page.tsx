@@ -17,11 +17,7 @@ export default function Home() {
 
   const [blinkLink, setBlinkLink] = useState('')
 
-
-
   const UploadBlink = async () => {
-
-
     let actionLinkJson = {
       link: 'https://create-actions.vercel.app/api/actions/mint',
       walletAddress: actions.walletAddress,
@@ -48,17 +44,11 @@ export default function Home() {
     //To Base64
     const base64Encoded = Buffer.from(compressed).toString('base64');
 
-    console.log(JSON.stringify({ code: base64Encoded }));
     let item = JSON.stringify({ code: base64Encoded });
 
     // setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
 
     setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${item}`)
-
-    console.log(blinkLink);
-    // console.log(blinkJson.actionUrl);
-
-
 
   }
 

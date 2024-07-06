@@ -1,10 +1,16 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import pako from 'pako';
 
 
 export default function Home() {
+  const [actionCarried, setActionCarried] = useState('ReceiveSol')
+  const [tokenSelected, setTokenSelected] = useState({
+    address: '',
+    symbol: ''
+  });
+  const [tokens, setTokens] = useState<any>([])
   const [actions, setActions] = useState({
     title: '',
     description: '',
@@ -15,6 +21,7 @@ export default function Home() {
   })
 
 
+  console.log(tokenSelected);
   const [blinkLink, setBlinkLink] = useState('')
 
   const UploadBlink = async () => {
@@ -29,7 +36,7 @@ export default function Home() {
       "description": actions.description,
       "image": actions.image,
       "price": actions.price,
-      "actionTitle": `${actions.actionTitle} ${actions.price} SOL`,
+      "actionTitle": `${actions.actionTitle} ${actions.price} ${tokenSelected.symbol !== "" ? tokenSelected.symbol : 'SOL'}`,
       "actionUrl": "https://create-actions.vercel.app/api/actions/mint?send=" + encodeURIComponent(JSON.stringify({
         link: "https://create-actions.vercel.app/api/actions/mint",
         walletAddress: actions.walletAddress,
@@ -52,6 +59,19 @@ export default function Home() {
 
   }
 
+
+  useEffect(() => {
+
+
+    (async () => {
+      fetch('https://token.jup.ag/strict').then(response => response.json()
+      ).then(data => {
+        setTokens(data)
+        console.log(data)
+      }).catch(err => console.log(err))
+    })()
+  }, [actionCarried])
+
   return (
     <div className="flex flex-col justify-start items-center py-10 ">
 
@@ -62,10 +82,21 @@ export default function Home() {
 
         <div className="mb-3 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Kinldy Select from the list of actions</label>
-          <select name="" id="" className="p-2 rounded-lg bg-white/20">
-            <option value="Receive">Receive/Donate</option>
+          <select onChange={(e) => { setActionCarried(e.target.value) }} name="" id="" className="p-2 rounded-lg bg-white/20">
+            <option value="ReceiveSol">Create Payment Link SOL</option>
+            <option value="ReceiveOtherTokens">Create Payment Link Other Tokens</option>
           </select>
         </div>
+        {actionCarried == 'ReceiveOtherTokens' &&
+          <div className="mb-3 flex flex-col">
+            <label htmlFor="" className="mb-1 ps-2">Kinldy Select Token </label>
+            <select onChange={(e) => { setTokenSelected({ address: e.target.value.split(',')[0], symbol: e.target.value.split(',')[1] }) }} name="" id="" className="p-2 rounded-lg bg-white/20">
+              {tokens.map((token: any, index: number) => {
+                return <option key={index} value={[token.address, token.symbol]}>{token.symbol}</option>
+              })}
+            </select>
+          </div>
+        }
         <div className="mb-3 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">What's your Blink Title</label>
           <input onChange={(e) => setActions({ ...actions, title: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="enter name of your blink, it can be your name" />
@@ -81,7 +112,7 @@ export default function Home() {
           <input onChange={(e) => setActions({ ...actions, image: e.target.value })} type="text" placeholder="put in your blink hosted image" className="p-2 rounded-lg bg-white/20" />
         </div>
         <div className="mb-5 flex flex-col">
-          <label htmlFor="" className="mb-1 ps-2">Amount to Receive/Donate</label>
+          <label htmlFor="" className="mb-1 ps-2">Amount</label>
           <input onChange={(e) => setActions({ ...actions, price: e.target.value })} type="number" className="p-2 rounded-lg bg-white/20" placeholder="Amount to Receive" />
         </div>
         <div className="mb-5 flex flex-col">
@@ -94,7 +125,7 @@ export default function Home() {
           <input onChange={(e) => setActions({ ...actions, walletAddress: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="Enter your wallet address" />
         </div>
         <div>
-          <button onClick={() => UploadBlink()} className="rounded-xl bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Add Action</button>
+          <button onClick={() => UploadBlink()} className="rounded-xl bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Create Action</button>
         </div>
 
         {

@@ -5,7 +5,15 @@ import { useState } from "react";
 
 export default function Home() {
 
+
+
   const [actions, setActions] = useState([])
+
+  const UploadBlink = async () => {
+
+    fetch
+  }
+
   return (
     <div className="flex flex-col justify-start items-center py-10 ">
 
@@ -20,7 +28,7 @@ export default function Home() {
           </select>
         </div>
         <div className="mb-3 flex flex-col">
-          <label htmlFor="" className="mb-1 ps-2">What's your Blink Name</label>
+          <label htmlFor="" className="mb-1 ps-2">What's your Blink Title</label>
           <input type="text" className="p-2 rounded-lg bg-white/20" placeholder="enter name of your blink, it can be your name" />
         </div>
 
@@ -36,8 +44,8 @@ export default function Home() {
 
         <div>
           <button onClick={() => { }} className="rounded-xl bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Add Action</button>
-
         </div>
+
         {actions.map((action, index) => {
           return (
             <>
@@ -48,11 +56,6 @@ export default function Home() {
             </>
           )
         })}
-        <div className="mb-3 flex flex-col">
-          <label htmlFor="" className="mb-1 ps-2"></label>
-          <textarea className="p-2 rounded-lg bg-white/20" placeholder="describe your blink for users"></textarea>
-        </div>
-
       </div>
 
     </div>

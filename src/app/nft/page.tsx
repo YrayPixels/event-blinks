@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-export const mockNFTs = [
+const mockNFTs = [
 
     {
         title: "NFT 1",

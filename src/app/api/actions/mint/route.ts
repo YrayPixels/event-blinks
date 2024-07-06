@@ -106,7 +106,7 @@ export const POST = async (req: Request) => {
             },
         })
 
-        return Response.json(payload, { headers: ACTIONS_CORS_HEADERS })
+        return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
 
     } catch (e) {
         return Response.json({ message: "Error sending transaction" }, { status: 400, headers: ACTIONS_CORS_HEADERS })

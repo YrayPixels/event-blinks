@@ -55,7 +55,8 @@ export default function Home() {
   return (
     <div className="flex flex-col justify-start items-center py-10 ">
 
-      <h2 className="font-bold text-[40px] mb-10 w-10/12 text-center">Create Blinks With a Click</h2>
+      <h2 className="font-bold text-[40px] mb-3 w-10/12 text-center">Create Blinks With a Click</h2>
+      <a href="https://forms.gle/AkJSFZ94LguHqhc56" target="_blank" className="text-center mb-10 underline w-10/12">You want us to create a new action?. Let us Know</a>
 
       <div className="w-10/12 md:w-5/12 m-auto  gap-y-2 items-center">
 

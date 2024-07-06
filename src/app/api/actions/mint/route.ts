@@ -1,4 +1,5 @@
-import { ACTIONS_CORS_HEADERS, ActionGetResponse } from '@solana/actions';
+import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
+import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { NextApiRequest } from 'next';
 
 export const GET = (req: Request) => {
@@ -36,6 +37,48 @@ export const GET = (req: Request) => {
 }
 export const OPTIONS = GET;
 
-export const POST = (req: Request) => {
-    return Response.json({ message: "POST request received" }, { headers: ACTIONS_CORS_HEADERS })
+export const POST = async (req: Request) => {
+
+    const url = new URL(req.url);
+    const params = new URLSearchParams(url.search);
+    const walletAddressReq = params.get('walletAddress') || "";
+    const amount = params.get('amount') || 0;
+
+    if (walletAddressReq === '') {
+        return Response.json({ message: "No wallet address found" }, { headers: ACTIONS_CORS_HEADERS })
+    }
+
+    try {
+
+        const body: ActionPostRequest = await req.json();
+
+        let walletAddress = new PublicKey(walletAddressReq);
+
+
+        const lamportsToSend = Number(amount) * LAMPORTS_PER_SOL;
+
+        const transferTransaction = new Transaction().add(
+            SystemProgram.transfer({
+                fromPubkey: new PublicKey(body.account),
+                toPubkey: walletAddress,
+                lamports: lamportsToSend,
+            }),
+        );
+
+        const connection = new Connection(clusterApiUrl('devnet'));
+        transferTransaction.feePayer = new PublicKey(body.account);
+        transferTransaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+
+        const payload: ActionPostResponse = await createPostResponse({
+            fields: {
+                transaction: transferTransaction,
+            },
+        })
+
+        return Response.json(payload, { headers: ACTIONS_CORS_HEADERS })
+
+    } catch (e) {
+        console.log(e)
+        return Response.json({ message: "Error sending transaction" }, { status: 400, headers: ACTIONS_CORS_HEADERS })
+    }
 }

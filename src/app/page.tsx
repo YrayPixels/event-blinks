@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { v2 as cloudinary } from 'cloudinary';
+import pako from 'pako';
 
 
 export default function Home() {
@@ -25,24 +25,40 @@ export default function Home() {
     let actionLinkJson = {
       link: 'https://create-actions.vercel.app/api/actions/mint',
       walletAddress: actions.walletAddress,
-      price: actions.price
+      price: actions.price,
     }
-
 
     let blinkJson = {
-      title: actions.title,
-      description: actions.description,
-      image: actions.image,
-      price: actions.price,
-      actionTitle: `${actions.actionTitle} ${actions.price} SOL`,
-      actionUrl: `http://localhost:3000/api/actions/mint?send=${encodeURIComponent(JSON.stringify(actionLinkJson))}`,
-      walletAddress: actions.walletAddress,
+      "title": actions.title,
+      "description": actions.description,
+      "image": actions.image,
+      "price": actions.price,
+      "actionTitle": `${actions.actionTitle} ${actions.price} SOL`,
+      "actionUrl": "https://create-actions.vercel.app/api/actions/mint?send=" + encodeURIComponent(JSON.stringify({
+        link: "https://create-actions.vercel.app/api/actions/mint",
+        walletAddress: actions.walletAddress,
+        price: actions.price
+      })),
+      "walletAddress": actions.walletAddress,
     }
+    //to Json String
+    const jsonString = JSON.stringify(blinkJson);
+    //To Gzip
+    const compressed = pako.gzip(jsonString);
+    //To Base64
+    const base64Encoded = Buffer.from(compressed).toString('base64');
+
+    console.log(JSON.stringify({ code: base64Encoded }));
+    let item = JSON.stringify({ code: base64Encoded });
 
     // setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
 
-    setBlinkLink(`https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
-    console.log(blinkJson.actionUrl)
+    setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${item}`)
+
+    console.log(blinkLink);
+    // console.log(blinkJson.actionUrl);
+
+
 
   }
 

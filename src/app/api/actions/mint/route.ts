@@ -20,17 +20,13 @@ export const GET = (req: Request) => {
         icon: new URL(item.image, url.origin).toString(),
         title: item.title,
         description: item.description,
-        label: `Mint ${item.price} SOL `,
+        label: `${item.actionTitle}`,
         links: {
             actions: [
                 {
-                    href: `https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=${create}`,
-                    label: `Mint ${item.price} SOL`
+                    href: `${item.actionUrl}`,
+                    label: `${item.actionTitle}`
                 },
-                {
-                    href: `https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=${create}`,
-                    label: `Donate ${item.price} SOL`
-                }
             ]
 
         }

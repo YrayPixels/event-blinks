@@ -29,7 +29,7 @@ export default function Home() {
       walletAddress: actions.walletAddress,
     }
 
-    setBlinkLink(`https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
+    setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
   }
 
   return (
@@ -52,7 +52,7 @@ export default function Home() {
 
         <div className="mb-3 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">What does your Blink Do!</label>
-          <textarea onChange={(e) => setActions({ ...actions, description: e.target.value })} className="p-2 rounded-lg bg-white/20" placeholder="describe your blink for users"></textarea>
+          <textarea rows={10} onChange={(e) => setActions({ ...actions, description: e.target.value })} className="p-2 rounded-lg bg-white/20" placeholder="describe your blink for users"></textarea>
         </div>
 
         <div className="mb-3 flex flex-col">

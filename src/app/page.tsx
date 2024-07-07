@@ -21,7 +21,6 @@ export default function Home() {
   })
 
 
-  console.log(tokenSelected);
   const [blinkLink, setBlinkLink] = useState('')
 
   const UploadBlink = async () => {
@@ -36,7 +35,7 @@ export default function Home() {
       "description": actions.description,
       "image": actions.image,
       "price": actions.price,
-      "actionTitle": `${actions.actionTitle} ${actions.price} ${tokenSelected.symbol !== "" ? tokenSelected.symbol : 'SOL'}`,
+      "actionTitle": `${actions.actionTitle} ${actions.price} ${actionCarried == "ReceiveOtherTokens" ? tokenSelected.symbol : 'SOL'}`,
       "actionUrl": "https://create-actions.vercel.app/api/actions/mint?send=" + encodeURIComponent(JSON.stringify({
         link: "https://create-actions.vercel.app/api/actions/mint",
         walletAddress: actions.walletAddress,

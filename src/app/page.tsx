@@ -24,11 +24,16 @@ export default function Home() {
   const [blinkLink, setBlinkLink] = useState('')
 
   const UploadBlink = async () => {
-    let actionLinkJson = {
-      link: 'https://create-actions.vercel.app/api/actions/mint',
-      walletAddress: actions.walletAddress,
-      price: actions.price,
+
+    if (actions.title == '' || actions.description == '' || actions.image == '' || actions.price == '' || actions.actionTitle == '' || actions.walletAddress == '') {
+      alert('All Fields are required')
+      return
     }
+    // let actionLinkJson = {
+    //   link: 'https://create-actions.vercel.app/api/actions/mint',
+    //   walletAddress: actions.walletAddress,
+    //   price: actions.price,
+    // }
 
     let blinkJson = {
       "title": actions.title,
@@ -61,7 +66,6 @@ export default function Home() {
 
   useEffect(() => {
 
-
     (async () => {
       fetch('https://token.jup.ag/strict').then(response => response.json()
       ).then(data => {
@@ -73,11 +77,15 @@ export default function Home() {
 
   return (
     <div className="flex flex-col justify-start items-center py-10 ">
+      <div className="h-[100px] w-[100px] rounded-full overflow-hidden">
+
+        <Image src="/quick.jpg" style={{ objectFit: 'cover' }} width={200} height={200} alt="logo" />
+      </div>
 
       <h2 className="font-bold text-[40px] mb-3 w-10/12 text-center">Create Blinks With a Click</h2>
       <a href="https://forms.gle/AkJSFZ94LguHqhc56" target="_blank" className="text-center mb-10 underline w-10/12">You want us to create a new action?. Let us Know</a>
 
-      <div className="w-10/12 md:w-5/12 m-auto  gap-y-2 items-center">
+      <div className="w-10/12 md:w-5/12 m-auto md:grid grid-cols-2  gap-x-2 justify-center gap-y-2 items-center">
 
         <div className="mb-3 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Kinldy Select from the list of actions</label>
@@ -101,7 +109,7 @@ export default function Home() {
           <input onChange={(e) => setActions({ ...actions, title: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="enter name of your blink, it can be your name" />
         </div>
 
-        <div className="mb-3 flex flex-col">
+        <div className="mb-3 flex flex-col col-span-2">
           <label htmlFor="" className="mb-1 ps-2">What does your Blink Do!</label>
           <textarea rows={10} onChange={(e) => setActions({ ...actions, description: e.target.value })} className="p-2 rounded-lg bg-white/20" placeholder="describe your blink for users"></textarea>
         </div>
@@ -123,13 +131,13 @@ export default function Home() {
           <label htmlFor="" className="mb-1 ps-2">Enter Wallet Address</label>
           <input onChange={(e) => setActions({ ...actions, walletAddress: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="Enter your wallet address" />
         </div>
-        <div>
-          <button onClick={() => UploadBlink()} className="rounded-xl bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Create Action</button>
+        <div className="col-span-2 ">
+          <button onClick={() => UploadBlink()} className="rounded-xl  bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Create Action</button>
         </div>
 
         {
           blinkLink !== '' &&
-          <div className="mt-5 w-full justify-center items-center flex flex-row">
+          <div className="mt-5 w-full col-span-2 justify-center items-center flex flex-row">
             <a href={blinkLink} className="rounded-xl bg-yellow-400 py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto" target="_blank">Click to Visit Blink Link</a>
           </div>
         }

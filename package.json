@@ -9,8 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
+    "@mui/icons-material": "^5.16.0",
+    "@mui/material": "^5.16.0",
     "@solana/actions": "^1.1.1",
     "@solana/web3.js": "^1.94.0",
     "cloudinary": "^2.2.0",

@@ -18,16 +18,66 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+
+@keyframes flicker {
+
+  0%,
+  18%,
+  22%,
+  25%,
+  53%,
+  57%,
+  100% {
+    opacity: 1;
+  }
+
+  20%,
+  24%,
+  55% {
+    opacity: 0.5;
+  }
+
+  21%,
+  23% {
+    opacity: 0.3;
+  }
+
+  56% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes gradientChange {
+  0% {
+    background: linear-gradient(45deg, #ff0000, #ff9900);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  50% {
+    background: linear-gradient(45deg, #ff9900, #00ff00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  100% {
+    background: linear-gradient(45deg, #00ff00, #ff0000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.text-flicker {
+  animation: flicker 2s infinite, gradientChange 5s infinite;
 }

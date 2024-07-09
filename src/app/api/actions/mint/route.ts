@@ -103,7 +103,9 @@ export const POST = async (req: Request) => {
         const payload: ActionPostResponse = await createPostResponse({
             fields: {
                 transaction: transferTransaction,
+
             },
+
         })
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })

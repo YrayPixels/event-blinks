@@ -1,10 +1,11 @@
+import { decompressedUrl } from '@/app/utils/utils';
 import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { NextApiRequest } from 'next';
 import pako from 'pako';
 
 
-export const GET = (req: Request) => {
+export const GET = async (req: Request) => {
     try {
         const url = new URL(req.url);
         const params = new URLSearchParams(url.search);
@@ -22,19 +23,9 @@ export const GET = (req: Request) => {
         let adjusted = JSON.stringify(JSON.parse(create).code.replace(/ /g, '+'));
 
 
-        // Step 1: Decode base64 to buffer
-        const compressedRe = Buffer.from(adjusted, 'base64');
+        let jsonStringRe = await decompressedUrl(adjusted);
 
-        // Step 2: Unzip the buffer
-        const decompressedRe = pako.ungzip(compressedRe);
-
-        // Step 3: Convert buffer to string
-        const jsonStringRe = Buffer.from(decompressedRe).toString('utf-8');
-
-        // Step 4: Parse JSON string
         const item = JSON.parse(jsonStringRe);
-
-        console.log(item);
 
 
 

@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import pako from 'pako';
+import { compressUrl } from "../utils/utils";
 
 
 export default function Home() {
@@ -48,12 +49,8 @@ export default function Home() {
       })),
       "walletAddress": actions.walletAddress,
     }
-    //to Json String
-    const jsonString = JSON.stringify(blinkJson);
-    //To Gzip
-    const compressed = pako.gzip(jsonString);
-    //To Base64
-    const base64Encoded = Buffer.from(compressed).toString('base64');
+
+    let base64Encoded = await compressUrl(blinkJson);
 
     let item = JSON.stringify({ code: base64Encoded });
 

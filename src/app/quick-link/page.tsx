@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import pako from 'pako';
-import { compressUrl } from "../utils/utils";
 
 
 export default function Home() {
@@ -49,14 +48,18 @@ export default function Home() {
       })),
       "walletAddress": actions.walletAddress,
     }
-
-    let base64Encoded = await compressUrl(blinkJson);
+    //to Json String
+    const jsonString = JSON.stringify(blinkJson);
+    //To Gzip
+    const compressed = pako.gzip(jsonString);
+    //To Base64
+    const base64Encoded = Buffer.from(compressed).toString('base64');
 
     let item = JSON.stringify({ code: base64Encoded });
 
     // setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${encodeURIComponent(JSON.stringify(blinkJson))}`)
 
-    setBlinkLink(`https://www.dial.to/?action=solana-action:https://create-actions.vercel.app/api/actions/mint?create=${item}`)
+    setBlinkLink(`https://www.dial.to/?action=solana-action:https://www.quick-blinks.xyz/api/actions/mint?create=${item}`)
 
   }
 

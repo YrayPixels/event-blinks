@@ -1,3 +1,4 @@
+import { compressUrl } from '@/app/utils/utils';
 import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { NextApiRequest } from 'next';
@@ -68,47 +69,60 @@ export const OPTIONS = GET;
 
 export const POST = async (req: Request) => {
 
-    const url = new URL(req.url);
-    const params = new URLSearchParams(url.search);
+    const body = await req.json();
 
-    const send: any = params.get('send') || "{walletAddressReq: '' , price: 0}";
-    let decoded = decodeURIComponent(send);
-    let item = JSON.parse(decoded);
+    let productTitle = body.title;
+    let productDescription = body.description;
+    let productImage = body.image;
+    let productPrice = body.price;
+    let token = body.token;
+    let walletAddress = body.walletAddress;
 
-    if (item.walletAddress === '') {
-        return Response.json({ message: "No wallet address found" }, { headers: ACTIONS_CORS_HEADERS })
+    let missingFields = [];
+
+    if (!productTitle) missingFields.push("title");
+    if (!productDescription) missingFields.push("description");
+    if (!productImage) missingFields.push("image");
+    if (!productPrice) missingFields.push("price");
+    if (!token) missingFields.push("token");
+    if (!walletAddress) missingFields.push("walletAddress");
+
+    if (missingFields.length > 0) {
+        return Response.json({ message: `Missing required fields: ${missingFields.join(", ")}` }, { status: 400, headers: ACTIONS_CORS_HEADERS });
     }
 
-    try {
 
-        const body: ActionPostRequest = await req.json();
-
-        let walletAddress = new PublicKey(item.walletAddress);
-
-
-        const lamportsToSend = Number(item.price) * LAMPORTS_PER_SOL;
-
-        const transferTransaction = new Transaction().add(
-            SystemProgram.transfer({
-                fromPubkey: new PublicKey(body.account),
-                toPubkey: walletAddress,
-                lamports: lamportsToSend,
-            }),
-        );
-
-        const connection = new Connection(clusterApiUrl('devnet'));
-        transferTransaction.feePayer = new PublicKey(body.account);
-        transferTransaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
-
-        const payload: ActionPostResponse = await createPostResponse({
-            fields: {
-                transaction: transferTransaction,
-            },
-        })
-
-        return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
-
-    } catch (e) {
-        return Response.json({ message: "Error sending transaction" }, { status: 400, headers: ACTIONS_CORS_HEADERS })
+    let blinkJson = {
+        "title": productTitle,
+        "description": productDescription,
+        "image": productImage,
+        "price": productPrice,
+        "actionTitle": `Purchase with ${productPrice} ${token}}`,
+        "actionUrl": "https://www.quick-blinks.xyz/api/actions/mint?send=" + encodeURIComponent(JSON.stringify({
+            link: "https://www.quick-blinks.xyz/api/actions/mint",
+            walletAddress: walletAddress,
+            price: productPrice
+        })),
+        "walletAddress": walletAddress,
     }
+
+    //to Json String
+    const jsonString = JSON.stringify(blinkJson);
+    //To Gzip
+    const compressed = pako.gzip(jsonString);
+    //To Base64
+    const base64Encoded = Buffer.from(compressed).toString('base64');
+
+    let item = JSON.stringify({ code: base64Encoded });
+
+
+    let paymentLink = `https://www.dial.to/?action=solana-action:https://www.quick-blinks.xyz/api/actions/mint?create=${item}`;
+
+    let response = {
+        paymentLink: paymentLink,
+        message: "Success"
+    }
+
+    return Response.json(response, { status: 200, headers: ACTIONS_CORS_HEADERS })
+
 }

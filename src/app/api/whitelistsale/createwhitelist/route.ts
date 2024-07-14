@@ -10,40 +10,18 @@ export const GET = (req: Request) => {
         const params = new URLSearchParams(url.search);
         const create = params.get('create');
 
-        if (!create) {
-            return new Response(JSON.stringify({ message: "No create parameter found" }), {
-                headers: ACTIONS_CORS_HEADERS,
-                status: 400
-            });
-        }
-
-        let adjusted = JSON.stringify(JSON.parse(create).code.replace(/ /g, '+'));
-        console.log(adjusted);
-
-
-        // Step 1: Decode base64 to buffer
-        const compressedRe = Buffer.from(adjusted, 'base64');
-
-        // Step 2: Unzip the buffer
-        const decompressedRe = pako.ungzip(compressedRe);
-
-        // Step 3: Convert buffer to string
-        const jsonStringRe = Buffer.from(decompressedRe).toString('utf-8');
-
-        // Step 4: Parse JSON string
-        const item = JSON.parse(jsonStringRe);
 
 
         const payload = {
-            icon: new URL(item.image, url.origin).toString(),
-            title: item.title,
-            description: item.description,
-            label: `${item.actionTitle}`,
+            icon: new URL('https://www.quick-blinks.xyz/_next/image?url=%2Fquick.jpg&w=256&q=75'),
+            title: 'Create a Whitelist for your token',
+            description: 'This blinks creates a whitelist for your tokensale and helps only whitelisted users to participate, On creating a blink url will be shared to manage your whitelist',
+            label: `Create Whitelist`,
             links: {
                 actions: [
                     {
-                        href: `${item.actionUrl}`,
-                        label: `${item.actionTitle}`
+                        href: 'https://www.quick-blinks.xyz/api/whitelistsale/createwhitelist',
+                        label: 'Create Whitelist Now'
                     }
                 ]
             }
@@ -59,7 +37,6 @@ export const GET = (req: Request) => {
         });
     }
 };
-
 export const OPTIONS = GET;
 
 export const POST = async (req: Request) => {

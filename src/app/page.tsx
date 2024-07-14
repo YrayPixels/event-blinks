@@ -28,7 +28,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="h-screen overflow-hidden flex flex-col  relative justify-center items-center">
+      <div className="md:h-screen md:overflow-hidden flex flex-col  relative justify-center items-center">
         <div className="flex flex-col top-[200px] relative leading-tight justify-center  items-center z-50">
           <h1 className="text-[70px] md:text-[70px] text-center text-flicker font-bold">Quick Blinks</h1>
           <p className="text-[24px] mb-5">No code? No Problem</p>

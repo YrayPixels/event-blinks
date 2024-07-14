@@ -2,9 +2,10 @@ import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostR
 import { NextApiRequest } from 'next';
 import pako from 'pako';
 
-import * as anchor from "@project-serum/anchor";
+
 import * as web3 from "@solana/web3.js";
 import { IDL, WhitelistGatedSale } from '@/app/utils/whitelist_gated_sale';
+import { AnchorProvider, Program, Wallet } from '@project-serum/anchor';
 
 
 const programId = new web3.PublicKey("CRKtvQJeuqgASZzoSFnRh65ihHRVyMzidrw7sQmfYKi7");
@@ -15,8 +16,8 @@ const wallet = web3.Keypair.fromSecretKey(Uint8Array.from(
 ));
 
 
-const anchorProvider = new anchor.AnchorProvider(connection, new anchor.Wallet(wallet), {});
-const program = new anchor.Program(IDL as WhitelistGatedSale, programId, anchorProvider);
+const anchorProvider = new AnchorProvider(connection, new Wallet(wallet), {});
+const program = new Program(IDL as WhitelistGatedSale, programId, anchorProvider);
 
 
 export const GET = (req: Request) => {

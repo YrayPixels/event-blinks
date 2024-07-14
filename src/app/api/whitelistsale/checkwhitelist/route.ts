@@ -1,4 +1,4 @@
-import * as anchor from '@project-serum/anchor';
+
 import * as web3 from "@solana/web3.js";
 import { IDL, WhitelistGatedSale } from '@/app/utils/whitelist_gated_sale';
 
@@ -6,11 +6,12 @@ import { IDL, WhitelistGatedSale } from '@/app/utils/whitelist_gated_sale';
 import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { NextApiRequest } from 'next';
 import pako from 'pako';
+import { AnchorProvider, Program } from "@project-serum/anchor";
 
 const programId = new web3.PublicKey("CRKtvQJeuqgASZzoSFnRh65ihHRVyMzidrw7sQmfYKi7");
 const connection = new web3.Connection(web3.clusterApiUrl('devnet'), 'confirmed');
 
-const program = new anchor.Program(IDL as WhitelistGatedSale, programId, anchor.AnchorProvider.env());
+const program = new Program(IDL as WhitelistGatedSale, programId, AnchorProvider.env());
 
 
 export const GET = (req: Request) => {

@@ -8,10 +8,10 @@ import { NextApiRequest } from 'next';
 import pako from 'pako';
 import { AnchorProvider, Program } from "@project-serum/anchor";
 
-const programId = new web3.PublicKey("CRKtvQJeuqgASZzoSFnRh65ihHRVyMzidrw7sQmfYKi7");
-const connection = new web3.Connection(web3.clusterApiUrl('devnet'), 'confirmed');
+// const programId = new web3.PublicKey("CRKtvQJeuqgASZzoSFnRh65ihHRVyMzidrw7sQmfYKi7");
+// const connection = new web3.Connection(web3.clusterApiUrl('devnet'), 'confirmed');
 
-const program = new Program(IDL as WhitelistGatedSale, programId, AnchorProvider.env());
+// const program = new Program(IDL as WhitelistGatedSale, programId, AnchorProvider.env());
 
 
 export const GET = (req: Request) => {
@@ -69,8 +69,8 @@ export const POST = async (req: Request) => {
 
         const statePda = new web3.PublicKey('GUEGCufNfnLXUDKA9np4cC5TSYviFvFpgY61DPw8GLDM')
 
-        const newWhitelist = await program.account.state.fetch(statePda);
-        console.log(newWhitelist);
+        // const newWhitelist = await program.account.state.fetch(statePda);
+        // console.log(newWhitelist);
 
         const tx = new web3.Transaction();
         const payload: ActionPostResponse = await createPostResponse({

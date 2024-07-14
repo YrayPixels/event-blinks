@@ -30,7 +30,7 @@ export default function Home() {
       return
     }
     // let actionLinkJson = {
-    //   link: 'https://create-actions.vercel.app/api/actions/mint',
+    //   link: 'https://create-actions.vercel.app/api/actions/int',
     //   walletAddress: actions.walletAddress,
     //   price: actions.price,
     // }
@@ -105,18 +105,18 @@ export default function Home() {
           </div>
         }
         <div className="mb-3 flex flex-col">
-          <label htmlFor="" className="mb-1 ps-2">What's your Blink Title</label>
+          <label htmlFor="" className="mb-1 ps-2">Title</label>
           <input onChange={(e) => setActions({ ...actions, title: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="enter name of your blink, it can be your name" />
         </div>
 
         <div className="mb-3 flex flex-col col-span-2">
-          <label htmlFor="" className="mb-1 ps-2">What does your Blink Do!</label>
+          <label htmlFor="" className="mb-1 ps-2">Description</label>
           <textarea rows={10} onChange={(e) => setActions({ ...actions, description: e.target.value })} className="p-2 rounded-lg bg-white/20" placeholder="describe your blink for users"></textarea>
         </div>
 
         <div className="mb-3 flex flex-col">
-          <label htmlFor="" className="mb-1 ps-2">Blink Image</label>
-          <input onChange={(e) => setActions({ ...actions, image: e.target.value })} type="text" placeholder="put in your blink hosted image" className="p-2 rounded-lg bg-white/20" />
+          <label htmlFor="" className="mb-1 ps-2">Blink Icon</label>
+          <input onChange={(e) => setActions({ ...actions, image: e.target.value })} type="text" placeholder="put in your blink hosted Icon" className="p-2 rounded-lg bg-white/20" />
         </div>
         <div className="mb-5 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Amount</label>

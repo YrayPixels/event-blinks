@@ -28,13 +28,22 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="h-screen flex flex-col justify-center items-center">
+      <div className="h-screen overflow-hidden flex flex-col  relative justify-center items-center">
+        <div className="flex flex-col top-[200px] relative leading-tight justify-center  items-center z-50">
+          <h1 className="text-[70px] md:text-[70px] text-center text-flicker font-bold">Quick Blinks</h1>
+          <p className="text-[24px] mb-5">No code? No Problem</p>
 
-        <h1 className="text-[100px] md:text-[150px] text-center text-flicker font-bold">Quick Blinks</h1>
-        <div className="flex flex-row justify-center items-center w-full gap-x-4">
-          <a href="/quick-link" className="text-[15px] rounded-xl  md:w-[200px] text-center p-4 bg-[#60DEE8] hover:bg-[#ED3A4F] ">Create a Quick-Blink</a>
-          <a href="/developers" className="text-[15px] rounded-xl  md:w-[200px] text-center p-4 bg-[#ED3A4F] hover:bg-[#60DEE8]">Developers</a>
+          <div className="flex flex-row justify-center items-center w-full gap-x-4">
+            <a href="/quick-link" className="text-[15px] rounded-xl  md:w-[200px] text-center p-4 bg-[#60DEE8] hover:bg-[#ED3A4F] ">Create a Quick-Blink</a>
+            <a href="/developers" className="text-[15px] rounded-xl  md:w-[200px] text-center p-4 bg-[#ED3A4F] hover:bg-[#60DEE8]">Developers</a>
+          </div>
+
+          <div className=" ">
+            <Image src={'/create.png'} alt="" width={700} height={100} />
+          </div>
         </div>
+
+
 
       </div>
       {menu &&

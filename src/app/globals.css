@@ -66,7 +66,7 @@ body {
   }
 
   50% {
-    background: linear-gradient(45deg, #ff9900, #00ff00);
+    background: linear-gradient(45deg, #c1a273, #00ff00);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -79,5 +79,5 @@ body {
 }
 
 .text-flicker {
-  animation: flicker 2s infinite, gradientChange 5s infinite;
+  animation: gradientChange 5s infinite;
 }

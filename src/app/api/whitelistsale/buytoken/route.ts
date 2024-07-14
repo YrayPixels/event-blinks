@@ -75,27 +75,27 @@ export const POST = async (req: Request) => {
 
 
 
-        const buyTokenInstruction = program.methods
-            .buyToken(new anchor.BN(1))
-            .accounts({
-                state: statePda,
-                userInfo: userInfoPda,
-                buyer: buyer.publicKey,
-                treasury: treasury.publicKey,
-                mint: mint.publicKey,
-                tokenAccount: tokenAccount.publicKey,
-                tokenProgram: TOKEN_PROGRAM_ID,
-                tokenAuthority: tokenAuthority.publicKey,
-                systemProgram: web3.SystemProgram.programId,
-            })
-            .instruction();
+        // const buyTokenInstruction = program.methods
+        //     .buyToken(new anchor.BN(1))
+        //     .accounts({
+        //         state: statePda,
+        //         userInfo: userInfoPda,
+        //         buyer: buyer.publicKey,
+        //         treasury: treasury.publicKey,
+        //         mint: mint.publicKey,
+        //         tokenAccount: tokenAccount.publicKey,
+        //         tokenProgram: TOKEN_PROGRAM_ID,
+        //         tokenAuthority: tokenAuthority.publicKey,
+        //         systemProgram: web3.SystemProgram.programId,
+        //     })
+        //     .instruction();
 
         const body: ActionPostRequest = await req.json();
 
 
         const transferTransaction = new web3.Transaction()
 
-        transferTransaction.add(buyTokenInstruction);
+        // transferTransaction.add(buyTokenInstruction);
 
         const connection = new web3.Connection(web3.clusterApiUrl('devnet'));
         transferTransaction.feePayer = new web3.PublicKey(body.account);
@@ -103,7 +103,7 @@ export const POST = async (req: Request) => {
 
         const payload: ActionPostResponse = await createPostResponse({
             fields: {
-                transaction: txHass,
+                transaction: transferTransaction,
 
             },
 

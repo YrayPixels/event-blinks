@@ -18,7 +18,6 @@ export const GET = (req: Request) => {
         }
 
         let adjusted = JSON.stringify(JSON.parse(create).code.replace(/ /g, '+'));
-        console.log(adjusted);
 
 
         // Step 1: Decode base64 to buffer

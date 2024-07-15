@@ -70,8 +70,7 @@ export default function Home() {
       fetch('https://token.jup.ag/strict').then(response => response.json()
       ).then(data => {
         setTokens(data)
-        console.log(data)
-      }).catch(err => console.log(err))
+      }).catch(err => console.error(err))
     })()
   }, [actionCarried])
 

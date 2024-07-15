@@ -62,7 +62,6 @@ export default function Home() {
         // URL encode the JSON string
         const urlEncodedString = encodeURIComponent(jsonString);
 
-        console.log(urlEncodedString);
 
         window.location.href = 'https://www.dial.to/?action=solana-action:http://localhost:3000/api/actions/mint?create=' + urlEncodedString;
     }

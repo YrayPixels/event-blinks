@@ -36,7 +36,7 @@ export const GET = (req: Request) => {
             "description": productDescription,
             "image": productImage,
             "price": productPrice,
-            "actionTitle": `Purchase with ${productPrice} ${token}}`,
+            "actionTitle": `Purchase with ${productPrice} ${token}`,
             "actionUrl": "https://www.quick-blinks.xyz/api/actions/mint?send=" + encodeURIComponent(JSON.stringify({
                 link: "https://www.quick-blinks.xyz/api/actions/mint",
                 walletAddress: walletAddress,

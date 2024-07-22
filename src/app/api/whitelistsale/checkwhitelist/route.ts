@@ -5,7 +5,6 @@ import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostR
 
 export const GET = (req: Request) => {
     try {
-
         const payload = {
             icon: new URL('https://www.quick-blinks.xyz/_next/image?url=%2Fquick.jpg&w=256&q=75'),
             title: 'Buy QUICK BLINKS Token',
@@ -49,7 +48,6 @@ export const GET = (req: Request) => {
 };
 
 export const OPTIONS = GET;
-
 export const POST = async (req: Request) => {
 
 

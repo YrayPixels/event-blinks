@@ -91,7 +91,7 @@ export const POST = async (req: Request) => {
             }),
         );
 
-        const connection = new Connection(clusterApiUrl('devnet'));
+        const connection = new Connection(clusterApiUrl('mainnet-beta'));
         transferTransaction.feePayer = new PublicKey(body.account);
         transferTransaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
 

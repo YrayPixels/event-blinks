@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import pako from 'pako';
+import { TopNav } from "@/components/navigation/TopNav";
 
 
 export default function Home() {
@@ -76,7 +77,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col justify-start items-center py-10 ">
-      <div className="h-[100px] w-[100px] rounded-full overflow-hidden">
+      <TopNav />
+
+      <div className="h-[100px] w-[100px] mt-20 rounded-full overflow-hidden">
 
         <Image src="/quick.jpg" style={{ objectFit: 'cover' }} width={200} height={200} alt="logo" />
       </div>

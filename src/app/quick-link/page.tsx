@@ -80,7 +80,6 @@ export default function Home() {
       <TopNav />
 
       <div className="h-[100px] w-[100px] mt-20 rounded-full overflow-hidden">
-
         <Image src="/quick.jpg" style={{ objectFit: 'cover' }} width={200} height={200} alt="logo" />
       </div>
 
@@ -91,7 +90,7 @@ export default function Home() {
 
         <div className="mb-3 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Kinldy Select from the list of actions</label>
-          <select onChange={(e) => { setActionCarried(e.target.value) }} name="" id="" className="p-2 rounded-lg bg-white/20">
+          <select onChange={(e) => { setActionCarried(e.target.value) }} name="" id="" className="p-2 rounded-lg border-black border ">
             <option value="ReceiveSol">Create Payment Link SOL</option>
             <option value="ReceiveOtherTokens">Create Payment Link Other Tokens</option>
           </select>
@@ -99,39 +98,40 @@ export default function Home() {
         {actionCarried == 'ReceiveOtherTokens' &&
           <div className="mb-3 flex flex-col">
             <label htmlFor="" className="mb-1 ps-2">Kinldy Select Token </label>
-            <select onChange={(e) => { setTokenSelected({ address: e.target.value.split(',')[0], symbol: e.target.value.split(',')[1] }) }} name="" id="" className="p-2 rounded-lg bg-white/20">
+            <select onChange={(e) => { setTokenSelected({ address: e.target.value.split(',')[0], symbol: e.target.value.split(',')[1] }) }} name="" id="" className="p-2 rounded-lg border-black border ">
               {tokens.map((token: any, index: number) => {
                 return <option key={index} value={[token.address, token.symbol]}>{token.symbol}</option>
               })}
             </select>
           </div>
         }
+
         <div className="mb-3 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Title</label>
-          <input onChange={(e) => setActions({ ...actions, title: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="enter name of your blink, it can be your name" />
+          <input onChange={(e) => setActions({ ...actions, title: e.target.value })} type="text" className="p-2 rounded-lg border-black border " placeholder="enter name of your blink, it can be your name" />
         </div>
 
         <div className="mb-3 flex flex-col col-span-2">
           <label htmlFor="" className="mb-1 ps-2">Description</label>
-          <textarea rows={10} onChange={(e) => setActions({ ...actions, description: e.target.value })} className="p-2 rounded-lg bg-white/20" placeholder="describe your blink for users"></textarea>
+          <textarea rows={10} onChange={(e) => setActions({ ...actions, description: e.target.value })} className="p-2 rounded-lg border-black border " placeholder="describe your blink for users"></textarea>
         </div>
 
         <div className="mb-3 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Blink Icon</label>
-          <input onChange={(e) => setActions({ ...actions, image: e.target.value })} type="text" placeholder="put in your blink hosted Icon" className="p-2 rounded-lg bg-white/20" />
+          <input onChange={(e) => setActions({ ...actions, image: e.target.value })} type="text" placeholder="put in your blink hosted Icon" className="p-2 rounded-lg border-black border " />
         </div>
         <div className="mb-5 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Amount</label>
-          <input onChange={(e) => setActions({ ...actions, price: e.target.value })} type="number" className="p-2 rounded-lg bg-white/20" placeholder="Amount to Receive" />
+          <input onChange={(e) => setActions({ ...actions, price: e.target.value })} type="number" className="p-2 rounded-lg border-black border " placeholder="Amount to Receive" />
         </div>
         <div className="mb-5 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Enter Action Label</label>
-          <input onChange={(e) => setActions({ ...actions, actionTitle: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="Amount to Receive" />
+          <input onChange={(e) => setActions({ ...actions, actionTitle: e.target.value })} type="text" className="p-2 rounded-lg border-black border " placeholder="Amount to Receive" />
         </div>
 
         <div className="mb-5 flex flex-col">
           <label htmlFor="" className="mb-1 ps-2">Enter Wallet Address</label>
-          <input onChange={(e) => setActions({ ...actions, walletAddress: e.target.value })} type="text" className="p-2 rounded-lg bg-white/20" placeholder="Enter your wallet address" />
+          <input onChange={(e) => setActions({ ...actions, walletAddress: e.target.value })} type="text" className="p-2 rounded-lg border-black border " placeholder="Enter your wallet address" />
         </div>
         <div className="col-span-2 ">
           <button onClick={() => UploadBlink()} className="rounded-xl  bg-[#59E4C0] py-5 text-[#03634A] p-2 text-[16px] text-center w-full m-auto">Create Action</button>

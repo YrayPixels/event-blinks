@@ -13,7 +13,7 @@ export default function Home() {
     <div>
       <TopNav />
 
-      <div className="md:h-screen md:overflow-hidden flex flex-col  relative justify-center items-center">
+      <div className="md:h-screen  md:overflow-hidden flex flex-col  relative justify-center items-center">
         <div className="flex flex-col top-[200px] relative leading-tight justify-center  items-center z-50">
           <h1 className="text-[70px] md:text-[70px] text-center text-flicker font-bold">Quick Blinks</h1>
           <p className="text-[24px] mb-5">No code? No Problem</p>
@@ -32,15 +32,15 @@ export default function Home() {
 
       </div>
       {menu &&
-        <div className="flex  fixed top-0 h-screen w-screen bg-black gap-y-8 text-white flex-col justify-start pt-10 items-center mt-5">
+        <div className="flex  fixed top-0 h-screen w-screen bg-black gap-y-8  flex-col justify-start pt-10 items-center mt-5">
           <div>
             <div onClick={() => setMenu(false)}>
               <Close />
             </div>
           </div>
-          <a className="font-bold text-white" href="/developers">Developers</a>
-          <a className="font-bold text-white" href="/about-us">About Us</a>
-          <a className="font-bold text-white" href="/quick-link">Instant Links</a>
+          <a className="font-bold " href="/developers">Developers</a>
+          <a className="font-bold " href="/about-us">About Us</a>
+          <a className="font-bold " href="/quick-link">Instant Links</a>
         </div>
       }
 

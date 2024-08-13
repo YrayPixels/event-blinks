@@ -35,7 +35,7 @@ export default function Home() {
                         <div className="grid grid-cols-4 gap-2   ">
 
                             {SectionsText.features.map((feature, index) =>
-                                <div key={index} className="feature border p-4 bg-[#15110c]/70 hover:bg-[#60DEE8]/50 border-[#60dee8]/50 backdrop-blur-lg flex flex-col h-[300px]  justify-start items-start rounded-xl">
+                                <div key={index} className="feature  border p-4 bg-[#15110c]/70 hover:bg-[#60DEE8]/50 border-[#60dee8]/50 backdrop-blur-lg flex flex-col h-[300px]  justify-start items-start rounded-xl">
                                     <div className="flex flex-row justify-center items-center py-3 w-full">
                                         {feature.icon == "calendar" ? <CalendarToday style={{ fontSize: 60 }} /> : feature.icon == "lock" ? <Lock style={{ fontSize: 60 }} /> : feature.icon == "gear" ? <Settings style={{ fontSize: 60 }} /> : <Timeline style={{ fontSize: 60 }} />}
                                     </div>
@@ -51,7 +51,7 @@ export default function Home() {
 
                 </section>
 
-                <section className="how-it-works py-10">
+                <section className="how-it-works bg-[url('/grid_bg.png')] py-10">
                     <h2 className="text-[40px] text-center mb-5 font-bold">How It Works</h2>
                     {HowitWorks.map((step, index) => {
                         return <div key={index} className="step relative h-screen py-5 px-5">
@@ -64,7 +64,7 @@ export default function Home() {
                 </section>
 
 
-                <section className="testimonials w-full py-10">
+                <section className="testimonials w-full h-screen flex flex-col justify-center items-center py-20">
                     <h2 className="text-[40px] text-center mb-5 px-4 font-bold">Trusted by Event Organizers Worldwide</h2>
                     <div className="grid grid-cols-3 items-center w-10/12 m-auto gap-x-4">
                         {Testimonials.map((item, index) =>

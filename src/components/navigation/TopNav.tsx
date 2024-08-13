@@ -23,7 +23,7 @@ export const TopNav = () => {
                 <a className="" href="/quick-link">Instant Links</a>
             </div>
             <div>
-                <a href="/login">
+                <a href="/auth/login">
                     <button className="px-10 py-2 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8]">Login</button>
                 </a>
             </div>

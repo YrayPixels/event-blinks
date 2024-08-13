@@ -7,6 +7,8 @@ import pako from 'pako';
 export const GET = (req: Request) => {
     try {
         const url = new URL(req.url);
+        const params = new URLSearchParams(url.search);
+        const create = params.get('event-id');
 
 
         const payload = {
@@ -17,9 +19,8 @@ export const GET = (req: Request) => {
 
             links: {
                 actions: [
-
                     {
-                        href: `/api/events/create`,
+                        href: `http://localhost:3000/api/events/create`,
                         label: 'Create Event',
                         "parameters": [
                             {
@@ -61,6 +62,7 @@ export const GET = (req: Request) => {
             }
         };
 
+
         return new Response(JSON.stringify(payload), {
             headers: ACTIONS_CORS_HEADERS
         });
@@ -79,22 +81,15 @@ export const POST = async (req: Request) => {
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
 
-    const send: any = params.get('send') || "{walletAddressReq: '' , price: 0}";
-    let decoded = decodeURIComponent(send);
-    let item = JSON.parse(decoded);
-
-    if (item.walletAddress === '') {
-        return Response.json({ message: "No wallet address found" }, { headers: ACTIONS_CORS_HEADERS })
-    }
 
     try {
 
         const body: ActionPostRequest = await req.json();
 
-        let walletAddress = new PublicKey(item.walletAddress);
+        let walletAddress = new PublicKey("13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ");
 
 
-        const lamportsToSend = Number(item.price) * LAMPORTS_PER_SOL;
+        const lamportsToSend = Number(0.025) * LAMPORTS_PER_SOL;
 
         const transferTransaction = new Transaction().add(
             SystemProgram.transfer({
@@ -104,7 +99,7 @@ export const POST = async (req: Request) => {
             }),
         );
 
-        const connection = new Connection(clusterApiUrl('mainnet-beta'));
+        const connection = new Connection(clusterApiUrl('devnet'));
         transferTransaction.feePayer = new PublicKey(body.account);
         transferTransaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
 

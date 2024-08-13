@@ -22,14 +22,14 @@ const CustomInput: React.FC<CustomInputProps> = ({
     defaultValue,
     name,
     type, autocomplete, required, className, value, error, onChange, label, addOnStart, addOnEnd, sx, placeholder, disabled }) => {
-    let color = disabled ? 'border-[#757A6F] blur-[2px]' : error == true ? 'border-[#ff0000]' : error == false ? 'border-white ' : 'border-[#52594B]';
+    let color = disabled ? 'border-[#757A6F] blur-[2px]' : error == true ? 'border-[#ff0000]' : error == false ? 'border-black ' : 'border-black';
     let labelDisable = disabled ? "blur-[2px]" : "";
     return (
         <div style={sx} className={className}>
-            {label && <label htmlFor={name} className={`text-white ${labelDisable} font-normal `}>
+            {label && <label htmlFor={name} className={`${labelDisable} font-normal `}>
                 {label}
             </label>}
-            <div className={`flex flex-row items-center justify-between border mt-3 ${color} text-white p-2 rounded-[20px] w-full`}>
+            <div className={`flex flex-row items-center justify-between border mt-3 ${color} p-2 rounded-lg w-full`}>
                 {addOnStart && addOnStart}
 
                 <input

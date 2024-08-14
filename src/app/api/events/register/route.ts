@@ -1,4 +1,5 @@
-import { fetchEvent } from '@/app/utils/requestsHandler';
+import { NETWORK, fetchEvent } from '@/app/utils/requestsHandler';
+import { TransferSol, TransferUsdc } from '@/app/utils/web3Utils';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { NextApiRequest } from 'next';
@@ -27,8 +28,8 @@ export const GET = async (req: Request) => {
             links: {
                 actions: [
                     {
-                        href: `${process.env.HOST_URL}/api/events/register/${eventId}`,
-                        label: 'Register for Event 0.04SOL',
+                        href: `${process.env.HOST_URL}/api/events/register?event-id=${eventId}`,
+                        label: `Register for Event ${Number(item.fee).toFixed(2)} ${item.payment_method}`,
                         "parameters": [
                             {
                                 "name": "Name", // field name
@@ -83,38 +84,44 @@ export const POST = async (req: Request) => {
 
 
         //Check if it is sol Payments of USDC
-
         if (item.payment_method == "USDC") {
 
+            let response = await TransferUsdc(
+                NETWORK,
+                new PublicKey(body.account),
+                new PublicKey(item.payment_address),
+                Number(item.fee),
+            )
+            var payload: ActionPostResponse = await createPostResponse({
+                fields: {
+                    transaction: response,
+                    message: "Event Created Successfully",
+                },
+            })
 
         } else {
 
-        }
-        let walletAddress = new PublicKey("13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ");
+            let response = await TransferSol(
+                NETWORK,
+                new PublicKey(body.account),
+                new PublicKey(item.payment_address),
+                Number(item.fee)
+            )
 
-
-        const lamportsToSend = Number(0.025) * LAMPORTS_PER_SOL;
-
-        const transferTransaction = new Transaction().add(
-            SystemProgram.transfer({
-                fromPubkey: new PublicKey(body.account),
-                toPubkey: walletAddress,
-                lamports: lamportsToSend,
-            }),
-        );
-
-        const connection = new Connection(clusterApiUrl('devnet'));
-        transferTransaction.feePayer = new PublicKey(body.account);
-        transferTransaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
-
-        const payload: ActionPostResponseWithSerializedTransaction = {
-            transaction: transferTransaction,
-            message: "Event Created Successfully",
+            var payload: ActionPostResponse = await createPostResponse({
+                fields: {
+                    transaction: response,
+                    message: "Event Created Successfully",
+                },
+            })
         }
 
+        //Register User For Transaction, but don't confirm the transaction yet. Transaction will be confirmed via CRON Task and that would be where the Tickets will be Minted for the user
 
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
+
+
 
     } catch (e: any) {
         const error: ActionError = {

@@ -40,7 +40,8 @@ export const createEvent = async (
 
 
 
-export const NETWORK = process.env.NETWORK == 'devnet' ? clusterApiUrl('devnet') : clusterApiUrl('mainnet-beta');
+
+export const NETWORK = process.env.NEXT_PUBLIC_NETWORK == 'devnet' ? clusterApiUrl('devnet') : clusterApiUrl('mainnet-beta');
 
 
 

@@ -1,4 +1,4 @@
-import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
+import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostResponse, ActionPostResponseWithSerializedTransaction, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { NextApiRequest } from 'next';
 import pako from 'pako';
@@ -103,12 +103,12 @@ export const POST = async (req: Request) => {
         transferTransaction.feePayer = new PublicKey(body.account);
         transferTransaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
 
-        const payload: ActionPostResponse = await createPostResponse({
-            fields: {
-                transaction: transferTransaction,
-            },
+        const payload: ActionPostResponseWithSerializedTransaction = {
+            transaction: transferTransaction,
+            message: "Event Created Successfully",
+        }
 
-        })
+
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
 

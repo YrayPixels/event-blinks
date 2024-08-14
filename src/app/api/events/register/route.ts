@@ -30,22 +30,29 @@ export const GET = async (req: Request) => {
                     {
                         href: `${process.env.NEXT_PUBLIC_HOST_URL}/api/events/register?event-id=${eventId}`,
                         label: `Register for Event ${Number(item.fee).toFixed(2)} ${item.payment_method}`,
-                        "parameters": [
-                            {
-                                "name": "Name", // field name
-                                "label": "enter name / pseudo name are allowed", // text input placeholder
-                                type: "text",
-                                required: true,
-                            },
-                            {
-                                name: "Email Address", //
-                                label: 'enter your email address', // text input placeholder,
-                                type: "email",
-                                required: true,
-                            },
-                        ]
-                    }
-                ]
+                        // "parameters": [
+                        //     {
+                        //         "name": "Name", // field name
+                        //         "label": "enter name / pseudo name are allowed", // text input placeholder
+                        //         type: "text",
+                        //         required: true,
+                        //     },
+                        //     {
+                        //         name: "Email Address", //
+                        //         label: 'enter your email address', // text input placeholder,
+                        //         type: "email",
+                        //         required: true,
+                        //     },
+                        // ]
+                    },
+                    {
+                        "label": "$10", // button text
+                        "href": "/api/buy?amount=10"
+                    },
+
+                ],
+
+
             },
         };
 

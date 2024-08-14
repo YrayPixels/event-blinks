@@ -28,7 +28,7 @@ export const GET = async (req: Request) => {
             links: {
                 actions: [
                     {
-                        href: `${process.env.HOST_URL}/api/events/register?event-id=${eventId}`,
+                        href: `${process.env.NEXT_PUBLIC_HOST_URL}/api/events/register?event-id=${eventId}`,
                         label: `Register for Event ${Number(item.fee).toFixed(2)} ${item.payment_method}`,
                         "parameters": [
                             {

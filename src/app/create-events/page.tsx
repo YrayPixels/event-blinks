@@ -22,7 +22,7 @@ export default function Home() {
                         <h1 className="text-[60px] text-center w-8/12 m-auto text-flicker font-bold ">Effortless Event Management with Blinks</h1>
                         <p className="text-center text-[20px]">Create, manage, and sell tickets for your events with our no-code platform, powered by Solana blockchain.</p>
                         <div className="my-2 flex flex-row justify-center items-center">
-                            <a href="/login" className="px-10 py-3 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8] cta-button ">Get Started</a>
+                            <a href={`https://dial.to/devnet?action=solana-action:${process.env.NEXT_PUBLIC_HOST_URL}/api/events/create`} className="px-10 py-3 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8] cta-button ">Get Started</a>
                         </div>
                     </div>
                     <div className="hero-image">

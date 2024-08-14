@@ -27,3 +27,6 @@ export const decompressedUrl = async (stringUrl: any) => {
     return jsonStringRe;
 
 }
+
+let enviroment = "development";
+export const API_URL = enviroment == "development" ? "http://127.0.0.1:8000/api" : "http://ytechno.com.ng/api"

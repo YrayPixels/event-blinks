@@ -10,6 +10,9 @@ import { Avatar } from "@mui/material";
 
 export default function Home() {
     const [menu, setMenu] = useState(false)
+    const startFile = async () => {
+
+    }
     return (
         <div>
             <TopNav />

@@ -1,91 +1,95 @@
-import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
+import { fetchEvent } from '@/app/utils/requestsHandler';
+import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { NextApiRequest } from 'next';
 import pako from 'pako';
 
 
-export const GET = (req: Request) => {
+export const GET = async (req: Request) => {
+    const url = new URL(req.url);
+    const params = new URLSearchParams(url.search);
+    const eventId = params.get('event-id');
+
+    if (!eventId) {
+        const error: ActionError = {
+            message: `No Event Id Provided`,
+        }
+        return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
+    }
+
     try {
-        const url = new URL(req.url);
-        const params = new URLSearchParams(url.search);
-        const create = params.get('event-id');
-
-
+        let res = await fetchEvent(eventId)
+        let item = res.data;
         const payload = {
-            icon: "http://localhost:3000/events.png",
-            title: "Create Quick Events With Blinks",
-            description: "Create and manage your events and events Items directly from blinks, get access to the number of those that have purchased your tickets and registered for your events directly from your blinks.",
-            label: `Create Event`,
-
+            icon: item.flyer_uri,
+            title: `Register for ${item.event_name} -- ${new Date(item.date).toUTCString()}`,
+            description: `${item.description}`,
             links: {
                 actions: [
                     {
-                        href: `http://localhost:3000/api/events/create`,
-                        label: 'Create Event',
+                        href: `${process.env.HOST_URL}/api/events/register/${eventId}`,
+                        label: 'Register for Event 0.04SOL',
                         "parameters": [
                             {
-                                "name": "Event Name", // field name
-                                "label": "enter name/title for your event", // text input placeholder
-                                type: "text",
-                                required: true,
-
-                            },
-                            {
-                                name: "Event Description", //
-                                label: 'enter a short description of the event', // text input placeholder,
-                                type: "textarea",
-                                required: true,
-
-                            },
-                            {
-                                name: "Event Date and Time of Events",
-                                label: 'enter event date in the format YYYY-MM-DD', // date input placeholder
-                                type: "datetime-local",
-                                required: true,
-
-                            },
-                            {
-                                name: "Event Location",
-                                label: 'enter event location', // text input placeholder
+                                "name": "Name", // field name
+                                "label": "enter name / pseudo name are allowed", // text input placeholder
                                 type: "text",
                                 required: true,
                             },
                             {
-                                name: "Flyer URI",
-                                label: 'enter the link to the flyer for your event', // text input placeholder
-                                type: "url",
+                                name: "Email Address", //
+                                label: 'enter your email address', // text input placeholder,
+                                type: "email",
                                 required: true,
                             },
                         ]
                     }
                 ]
-            }
+            },
         };
-
 
         return new Response(JSON.stringify(payload), {
             headers: ACTIONS_CORS_HEADERS
         });
-    } catch (error: any) {
-        return new Response(JSON.stringify({ message: "Error parsing request", error: error?.response?.message }), {
-            headers: ACTIONS_CORS_HEADERS,
-            status: 500
-        });
+
+
+    } catch (er: any) {
+        const error: ActionError = {
+            message: `${er.response.message}`,
+        }
+        return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
     }
 };
 
 export const OPTIONS = GET;
 
 export const POST = async (req: Request) => {
-
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
+    const eventId = params.get('event-id');
+    if (!eventId) {
+        const error: ActionError = {
+            message: `No Event Id passed`,
+        }
+        return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
+    }
 
 
     try {
 
         const body: ActionPostRequest = await req.json();
+        let res = await fetchEvent(eventId)
+        let item = res.data;
 
+
+        //Check if it is sol Payments of USDC
+
+        if (item.payment_method == "USDC") {
+
+
+        } else {
+
+        }
         let walletAddress = new PublicKey("13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ");
 
 
@@ -113,7 +117,10 @@ export const POST = async (req: Request) => {
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
 
-    } catch (e) {
-        return Response.json({ message: "Error sending transaction" }, { status: 400, headers: ACTIONS_CORS_HEADERS })
+    } catch (e: any) {
+        const error: ActionError = {
+            message: `${e.response.message}`,
+        }
+        return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
     }
 }

@@ -1,4 +1,5 @@
-import { ACTIONS_CORS_HEADERS, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
+import { NETWORK, createEvent } from '@/app/utils/requestsHandler';
+import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { NextApiRequest } from 'next';
 import pako from 'pako';
@@ -7,55 +8,77 @@ import pako from 'pako';
 export const GET = (req: Request) => {
     try {
         const url = new URL(req.url);
-
-
         const payload = {
-            icon: "http://localhost:3000/events.png",
+            icon: `${process.env.HOST_URL}/events.png`,
             title: "Create Quick Events With Blinks",
             description: "Create and manage your events and events Items directly from blinks, get access to the number of those that have purchased your tickets and registered for your events directly from your blinks.",
             label: `Create Event`,
 
             links: {
                 actions: [
-
                     {
                         href: `/api/events/create`,
                         label: 'Create Event',
                         "parameters": [
                             {
-                                "name": "Event Name", // field name
+                                "name": "event_name", // field name
                                 "label": "enter name/title for your event", // text input placeholder
                                 type: "text",
                                 required: true,
 
                             },
                             {
-                                name: "Event Description", //
+                                name: "description", //
                                 label: 'enter a short description of the event', // text input placeholder,
                                 type: "textarea",
                                 required: true,
 
                             },
                             {
-                                name: "Event Date and Time of Events",
+                                name: "date_time",
                                 label: 'enter event date in the format YYYY-MM-DD', // date input placeholder
                                 type: "datetime-local",
                                 required: true,
 
                             },
                             {
-                                name: "Event Location",
+                                name: "location",
                                 label: 'enter event location', // text input placeholder
                                 type: "text",
                                 required: true,
                             },
                             {
-                                name: "Flyer URI",
-                                label: 'enter the link to the flyer for your event', // text input placeholder
+                                name: "flyer_url",
+                                label: 'enter the link to the flyer for your event - leave empty if none', // text input placeholder
                                 type: "url",
-                                required: true,
                             },
-                        ]
+                            {
+                                name: "fee",
+                                label: 'Enter Fee Leave empty if it is free', // text input placeholder
+                                type: "number",
+                            },
+                            {
+                                name: "payment_token",
+                                label: 'Select Payment Token', // text input placeholder
+                                type: "radio",
+                                options: [
+                                    {
+                                        label: "SOL",
+                                        value: "SOL",
+                                    },
+                                    {
+                                        label: "USDC",
+                                        value: "USDC",
+                                    },
+                                ]
+                            },
+                            {
+                                name: "payment_address",
+                                label: 'Enter Address You want to receive payment to', // text input placeholder
+                                type: "text",
+                            },
+                        ],
+
                     }
                 ]
             }
@@ -79,22 +102,15 @@ export const POST = async (req: Request) => {
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
 
-    const send: any = params.get('send') || "{walletAddressReq: '' , price: 0}";
-    let decoded = decodeURIComponent(send);
-    let item = JSON.parse(decoded);
-
-    if (item.walletAddress === '') {
-        return Response.json({ message: "No wallet address found" }, { headers: ACTIONS_CORS_HEADERS })
-    }
-
     try {
 
         const body: ActionPostRequest = await req.json();
 
-        let walletAddress = new PublicKey(item.walletAddress);
+        let data: any = body?.data;
 
-
-        const lamportsToSend = Number(item.price) * LAMPORTS_PER_SOL;
+        let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
+        let walletAddress = new PublicKey(address);
+        const lamportsToSend = Number(0.025) * LAMPORTS_PER_SOL;
 
         const transferTransaction = new Transaction().add(
             SystemProgram.transfer({
@@ -104,21 +120,48 @@ export const POST = async (req: Request) => {
             }),
         );
 
-        const connection = new Connection(clusterApiUrl('mainnet-beta'));
+        const connection = new Connection(NETWORK);
         transferTransaction.feePayer = new PublicKey(body.account);
         transferTransaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+        const date = new Date(data?.date_time);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        // Format time as "HH:MM"
+        const time = `${hours}:${minutes}`
 
+        try {
+            const response = await createEvent(
+                data?.event_name,
+                data?.description,
+                data?.date_time,
+                data?.location,
+                data?.flyer_url,
+                time,
+                data?.payment_token,
+                data?.payment_address,
+                body.account,
+                data?.fee,
+            );
+
+        } catch (eventError: any) {
+            console.error('Error in createEvent:', eventError);
+            const error: ActionError = {
+                message: `${eventError.message}`,
+            }
+            return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
+        }
         const payload: ActionPostResponse = await createPostResponse({
             fields: {
                 transaction: transferTransaction,
-
+                message: "Event Created Successfully",
             },
-
         })
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
-
-    } catch (e) {
-        return Response.json({ message: "Error sending transaction" }, { status: 400, headers: ACTIONS_CORS_HEADERS })
+    } catch (e: any) {
+        const error: ActionError = {
+            message: `${e.response.message}`,
+        }
+        return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
     }
 }

@@ -2,8 +2,6 @@ import { NETWORK, createEventTicket, fetchEvent, fetchTickets } from '@/app/util
 import { TransferSol, TransferUsdc } from '@/app/utils/web3Utils';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
-import { NextApiRequest } from 'next';
-import pako from 'pako';
 
 
 export const GET = async (req: Request) => {

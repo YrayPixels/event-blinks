@@ -23,7 +23,7 @@ export const confirmEventPayment = async (id: string) => {
 }
 
 
-export const confrimRegPayment = async (id: string) => {
+export const confirmRegPayment = async (id: string) => {
     let response = await request.get(`/confirm-reg-payment/${id}`)
     return response;
 }

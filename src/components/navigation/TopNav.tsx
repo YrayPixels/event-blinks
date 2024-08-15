@@ -11,6 +11,7 @@ export const TopNav = () => {
 
     const startEvent = async () => {
 
+        return;
         let response = await createEventTicket(
             "kjafakfjaf",
             "afakfjakfa",

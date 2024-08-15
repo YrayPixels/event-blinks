@@ -37,8 +37,6 @@ export const request: RequestInt = {
     },
 
     post: async ({ url, data }) => {
-
-        console.log(data);
         try {
             const response = await fetch(API_URL + url, {
                 method: "POST",

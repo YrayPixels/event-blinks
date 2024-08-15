@@ -1,4 +1,4 @@
-import { NETWORK, fetchEvent } from '@/app/utils/requestsHandler';
+import { NETWORK, fetchEvent, fetchTickets } from '@/app/utils/requestsHandler';
 import { TransferSol, TransferUsdc } from '@/app/utils/web3Utils';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
@@ -21,6 +21,16 @@ export const GET = async (req: Request) => {
     try {
         let res = await fetchEvent(eventId)
         let item = res.data;
+
+
+        // let ticket = await fetchTickets(eventId);
+        // let ticketItem = ticket.data;
+
+        // let options = []
+        // for (let i = 0; i < ticketItem.length; i++) {
+
+        // }
+
         const payload = {
             icon: item.flyer_uri,
             title: `Register for ${item.event_name} -- ${new Date(item.date).toUTCString()}`,
@@ -28,28 +38,38 @@ export const GET = async (req: Request) => {
             links: {
                 actions: [
                     {
-                        href: `${process.env.NEXT_PUBLIC_HOST_URL}/api/events/register?event-id=${eventId}`,
+                        href: `/api/events/register?event-id=${eventId}`,
                         label: `Register for Event ${Number(item.fee).toFixed(2)} ${item.payment_method}`,
-                        // "parameters": [
-                        //     {
-                        //         "name": "Name", // field name
-                        //         "label": "enter name / pseudo name are allowed", // text input placeholder
-                        //         type: "text",
-                        //         required: true,
-                        //     },
-                        //     {
-                        //         name: "Email Address", //
-                        //         label: 'enter your email address', // text input placeholder,
-                        //         type: "email",
-                        //         required: true,
-                        //     },
-                        // ]
+                        "parameters": [
+                            {
+                                "name": "name", // field name
+                                "label": "enter name / pseudo name are allowed", // text input placeholder
+                                type: "text",
+                                required: true,
+                            },
+                            {
+                                name: "email_address", //
+                                label: 'enter your email address', // text input placeholder,
+                                type: "email",
+                                required: true,
+                            },
+                            {
+                                name: "ticket_id",
+                                label: 'Select Ticket Type', // text input placeholder
+                                type: "radio",
+                                options: [
+                                    {
+                                        label: "SOL",
+                                        value: "SOL",
+                                    },
+                                    {
+                                        label: "USDC",
+                                        value: "USDC",
+                                    },
+                                ]
+                            },
+                        ]
                     },
-                    {
-                        "label": "$10", // button text
-                        "href": "/api/buy?amount=10"
-                    },
-
                 ],
 
 
@@ -127,9 +147,6 @@ export const POST = async (req: Request) => {
 
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
-
-
-
     } catch (e: any) {
         const error: ActionError = {
             message: `${e.response.message}`,

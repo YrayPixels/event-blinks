@@ -1,4 +1,4 @@
-import { NETWORK, createEvent } from '@/app/utils/requestsHandler'
+import { NETWORK, createEvent, createEventTicket, fetchEvent } from '@/app/utils/requestsHandler'
 import { TransferUsdc } from '@/app/utils/web3Utils'
 import { Close, Menu } from '@material-ui/icons'
 import { PublicKey } from '@solana/web3.js'
@@ -10,15 +10,14 @@ export const TopNav = () => {
 
 
     const startEvent = async () => {
-        let walletAddress = new PublicKey("13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ");
-        let walletAddress2 = new PublicKey("7onFqyJuCtSzSARS4C1gMpitvdSVyowpCuEdSgVvZH97");
 
-        let response = await TransferUsdc(
-            NETWORK,
-            walletAddress,
-            walletAddress2,
-            Number(0.025),
-        )
+        let response = await createEventTicket(
+            "kjafakfjaf",
+            "afakfjakfa",
+            "9",
+            "httier",
+            "10",
+        );
 
         console.log(response)
 

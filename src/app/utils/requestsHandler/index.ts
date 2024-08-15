@@ -7,15 +7,44 @@ export const fetchEvent = async (eventId: string) => {
     return response;
 }
 
+export const getAllEvent = async () => {
+    let response = await request.get(`/get-all-events`)
+    return response;
+}
+
+export const getAllRegistrations = async () => {
+    let response = await request.get(`/get-all-registrations`)
+    return response;
+}
+
+export const confirmEventPayment = async (id: string) => {
+    let response = await request.get(`/confirm-event-payment`)
+    return response;
+}
+
+
+export const confrimRegPayment = async (id: string) => {
+    let response = await request.get(`/confirm-reg-payment/${id}`)
+    return response;
+}
+
+
+
+
+export const fetchTickets = async (eventId: string) => {
+    let response = await request.get(`/get-tickets-for-event/${eventId}`)
+    return response;
+}
+
 export const createEvent = async (
     eventName: string,
     description: string,
     date: string,
     location: string,
-    flyer_uri: string,
+    flyerUri: string,
     time: string,
-    payment_method: string,
-    payment_address: string,
+    paymentMethod: string,
+    paymentAddress: string,
     owner: string,
     fee: string,
 ) => {
@@ -25,11 +54,11 @@ export const createEvent = async (
     bodyContent.append("description", description);
     bodyContent.append("date", date);
     bodyContent.append("location", location);
-    bodyContent.append("flyer_uri", flyer_uri);
+    bodyContent.append("flyer_uri", flyerUri);
     bodyContent.append("time", time);
     bodyContent.append("fee", fee)
-    bodyContent.append("payment_method", payment_method);
-    bodyContent.append("payment_address", payment_address);
+    bodyContent.append("payment_method", paymentMethod);
+    bodyContent.append("payment_address", paymentAddress);
     bodyContent.append("owner", owner);
 
 
@@ -38,6 +67,25 @@ export const createEvent = async (
     return response;
 }
 
+
+export const createEventTicket = async (
+    eventId: string,
+    ticketName: string,
+    price: string,
+    image: string,
+    quantity: string,
+) => {
+
+    let bodyContent = new FormData();
+    bodyContent.append("event_id", eventId);
+    bodyContent.append("ticket_name", ticketName);
+    bodyContent.append("price", price);
+    bodyContent.append("ticket_image", image);
+    bodyContent.append("quantity", quantity);
+
+    let response = await request.post({ url: '/create-ticket', data: bodyContent })
+    return response;
+}
 
 
 

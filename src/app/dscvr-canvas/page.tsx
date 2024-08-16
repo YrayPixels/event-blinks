@@ -1,11 +1,10 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import pako from 'pako';
 import { CalendarToday, Close, Lock, Menu, Settings, Timeline } from "@material-ui/icons";
-import { TopNav } from "@/components/navigation/TopNav";
 import { HowitWorks, SectionsText, Testimonials } from '@/lib/jsonitems'
 import { Avatar } from "@mui/material";
+import { Navigation } from "./components/Navigation";
 
 
 export default function Home() {
@@ -15,11 +14,11 @@ export default function Home() {
     }
     return (
         <div>
-            <TopNav />
+            <Navigation />
             <div className="flex flex-col relative h-full top-[120px] justify-center items-center">
                 <section className="hero py-4 h-screen">
                     <div className="hero-content space-y-8">
-                        <h1 className="text-[60px] text-center w-8/12 m-auto text-flicker font-bold ">Effortless Event Management with Blinks</h1>
+                        <h1 className="text-[40px] text-center w-8/12 m-auto text-flicker font-bold">Event Creation and Management is Live on Dscvr!</h1>
                         <p className="text-center text-[20px]">Create, manage, and sell tickets for your events with our no-code platform, powered by Solana blockchain.</p>
                         <div className="my-2 flex flex-row justify-center items-center">
                             <a target="_blank" href={`https://dial.to/devnet?action=solana-action:${process.env.NEXT_PUBLIC_HOST_URL}/api/events/create`} className="px-10 py-3 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8] cta-button ">Get Started</a>

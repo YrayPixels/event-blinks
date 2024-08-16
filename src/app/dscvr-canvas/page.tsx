@@ -66,7 +66,7 @@ export default function Home() {
                 </section>
 
 
-                <section className="testimonials w-full h-screen flex flex-col justify-center items-center py-20">
+                {/* <section className="testimonials w-full h-screen flex flex-col justify-center items-center py-20">
                     <h2 className="text-[40px] text-center mb-5 px-4 font-bold">Trusted by Event Organizers Worldwide</h2>
                     <div className="grid grid-cols-3 items-center w-10/12 m-auto gap-x-4">
                         {Testimonials.map((item, index) =>
@@ -85,7 +85,7 @@ export default function Home() {
                         )}
                     </div>
 
-                </section>
+                </section> */}
 
             </div>
 

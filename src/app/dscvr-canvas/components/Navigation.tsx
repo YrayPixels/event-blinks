@@ -9,20 +9,9 @@ export const Navigation = () => {
     const [menu, setMenu] = useState(false)
 
 
-    const startEvent = async () => {
+    const connectDscvr = async () => {
 
         return;
-        let response = await createEventTicket(
-            "kjafakfjaf",
-            "afakfjakfa",
-            "9",
-            "httier",
-            "10",
-        );
-
-        console.log(response)
-
-
     }
     return (
 
@@ -42,8 +31,8 @@ export const Navigation = () => {
                 {/* <a className="" href="/quick-link"></a> */}
             </div>
             <div>
-                <a onClick={() => startEvent()}>
-                    <button className="px-10 py-2 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8]">Login</button>
+                <a onClick={() => connectDscvr()}>
+                    <button className="px-10 py-2 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8]">Connect Dscvr</button>
                 </a>
             </div>
 

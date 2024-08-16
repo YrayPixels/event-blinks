@@ -19,9 +19,9 @@ export default function Home() {
                 <section className="hero py-4 h-screen">
                     <div className="hero-content space-y-8">
                         <h1 className="text-[40px] text-center w-8/12 m-auto text-flicker font-bold">Event Creation and Management is Live on Dscvr!</h1>
-                        <p className="text-center text-[20px]">Create, manage, and sell tickets for your events with our no-code platform, powered by Solana blockchain.</p>
+                        <p className="text-center text-[16px]">Create, manage, and sell tickets for your events with our no-code platform, powered by Solana blockchain.</p>
                         <div className="my-2 flex flex-row justify-center items-center">
-                            <a target="_blank" href={`https://dial.to/devnet?action=solana-action:${process.env.NEXT_PUBLIC_HOST_URL}/api/events/create`} className="px-10 py-3 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8] cta-button ">Get Started</a>
+                            <a target="_blank" href={`https://dial.to/devnet?action=solana-action:${process.env.NEXT_PUBLIC_HOST_URL}/api/events/create`} className="px-10 py-3 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8] cta-button ">Connect Dscvr</a>
                         </div>
                     </div>
                     <div className="hero-image">
@@ -34,14 +34,14 @@ export default function Home() {
                     <div className="w-10/12 h-full flex-col flex justify-center m-auto">
 
                         <h2 className="text-[40px] text-center mb-5 font-bold">{SectionsText.title}</h2>
-                        <div className="grid grid-cols-4 gap-2   ">
+                        <div className="grid grid-cols-2 gap-2   ">
 
                             {SectionsText.features.map((feature, index) =>
-                                <div key={index} className="feature  border p-4 bg-[#15110c]/70 hover:bg-[#60DEE8]/50 border-[#60dee8]/50 backdrop-blur-lg flex flex-col h-[300px]  justify-start items-start rounded-xl">
+                                <div key={index} className="feature  border p-4 bg-[#15110c]/70 hover:bg-[#60DEE8]/50 border-[#60dee8]/50 backdrop-blur-lg flex flex-col h-[200px]  justify-center items-center rounded-xl">
                                     <div className="flex flex-row justify-center items-center py-3 w-full">
-                                        {feature.icon == "calendar" ? <CalendarToday style={{ fontSize: 60 }} /> : feature.icon == "lock" ? <Lock style={{ fontSize: 60 }} /> : feature.icon == "gear" ? <Settings style={{ fontSize: 60 }} /> : <Timeline style={{ fontSize: 60 }} />}
+                                        {feature.icon == "calendar" ? <CalendarToday style={{ fontSize: 30 }} /> : feature.icon == "lock" ? <Lock style={{ fontSize: 30 }} /> : feature.icon == "gear" ? <Settings style={{ fontSize: 30 }} /> : <Timeline style={{ fontSize: 30 }} />}
                                     </div>
-                                    <h3 className="font-bold text-[24px] text-center leading-tight mb-2">{feature.title}</h3>
+                                    <h3 className="font-bold text-[20px] text-center leading-tight mb-2">{feature.title}</h3>
                                     <p className="font-light text-center">{feature.description}</p>
                                 </div>
                             )}

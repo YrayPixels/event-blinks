@@ -89,14 +89,12 @@ export const createEventTicket = async (
     image: string,
     quantity: string,
 ) => {
-
     let bodyContent = new FormData();
     bodyContent.append("event_id", eventId);
     bodyContent.append("ticket_name", ticketName);
     bodyContent.append("price", price);
     bodyContent.append("ticket_image", image);
     bodyContent.append("quantity", quantity);
-
     let response = await request.post({ url: '/create-ticket', data: bodyContent })
     return response;
 }

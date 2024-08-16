@@ -193,37 +193,39 @@ export const ValidateTransfer = async (
                 const instructions = transaction.transaction.message.instructions;
 
                 for (let instruction of instructions) {
-                    if (paymentMethod === 'SOL') {
-                        if (instruction.programId.equals(SystemProgram.programId) &&
-                            instruction.parsed.info.destination == toAddress &&
-                            instruction.parsed.info.source == fromAddress) {
-                            let lamp_Val = instruction.parsed.info.lamports;
-                            let convertedAmt = Number(lamp_Val) / LAMPORTS_PER_SOL;
-                            if (convertedAmt === amount) {
-                                transactionFound = true;
-                                return {
-                                    status: true,
-                                    message: 'Transfer found',
-                                    transactionHash: sigInfo.signature,
-                                    details: transaction
-                                };
+                    if ('parsed' in instruction) {
+                        if (paymentMethod === 'SOL') {
+                            if (instruction.programId.equals(SystemProgram.programId) &&
+                                instruction.parsed.info.destination == toAddress &&
+                                instruction.parsed.info.source == fromAddress) {
+                                let lamp_Val = instruction.parsed.info.lamports;
+                                let convertedAmt = Number(lamp_Val) / LAMPORTS_PER_SOL;
+                                if (convertedAmt === amount) {
+                                    transactionFound = true;
+                                    return {
+                                        status: true,
+                                        message: 'Transfer found',
+                                        transactionHash: sigInfo.signature,
+                                        details: transaction
+                                    };
+                                }
                             }
-                        }
-                    } else {
-                        // For SPL tokens like USDC
-                        if (instruction.programId.equals(TOKEN_PROGRAM_ID) &&
-                            instruction.parsed.info.tokenAddress == new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v') &&
-                            instruction.parsed.info.destination == toAddress &&
-                            instruction.parsed.info.source === fromAddress) {
-                            let tokenAmount = instruction.parsed.info.tokenAmount.uiAmount;
-                            if (tokenAmount === amount) {
-                                transactionFound = true;
-                                return {
-                                    status: true,
-                                    message: 'Transfer found',
-                                    transactionHash: sigInfo.signature,
-                                    details: transaction
-                                };
+                        } else {
+                            // For SPL tokens like USDC
+                            if (instruction.programId.equals(TOKEN_PROGRAM_ID) &&
+                                instruction.parsed.info.tokenAddress == new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v') &&
+                                instruction.parsed.info.destination == toAddress &&
+                                instruction.parsed.info.source === fromAddress) {
+                                let tokenAmount = instruction.parsed.info.tokenAmount.uiAmount;
+                                if (tokenAmount === amount) {
+                                    transactionFound = true;
+                                    return {
+                                        status: true,
+                                        message: 'Transfer found',
+                                        transactionHash: sigInfo.signature,
+                                        details: transaction
+                                    };
+                                }
                             }
                         }
                     }

@@ -29,7 +29,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                <section className="features w-full h-screen py-10 bg-cover  bg-fixed bg-[url('/automation.webp')] bg-black" id="features">
+                <section className="features w-full h-screen py-15 bg-cover  bg-fixed bg-[url('/automation.webp')] bg-black" id="features">
 
                     <div className="w-10/12 h-full flex-col flex justify-center m-auto">
 
@@ -57,8 +57,8 @@ export default function Home() {
                     <h2 className="text-[40px] text-center mb-5 font-bold">How It Works</h2>
                     {HowitWorks.map((step, index) => {
                         return <div key={index} className="step relative h-screen py-5 px-5">
-                            <h3 className="text-[200px] font-bold " >{step.title}-</h3>
-                            <p className="p-4 rounded-xl w-[400px] text-[#60DEE8] absolute right-[170px] bottom-[160px] text-[30px]">{step.description}</p>
+                            <h3 className="text-[100px] font-bold " >{step.title}-</h3>
+                            <p className="p-4 rounded-xl w-[400px] text-[#60DEE8] absolute right-[80px] bottom-[160px] text-[15px]">{step.description}</p>
                         </div>
                     })}
 

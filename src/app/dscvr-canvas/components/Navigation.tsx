@@ -17,7 +17,7 @@ export const Navigation = () => {
 
         <div className="flex flex-row justify-between bg-black/50 backdrop-blur-md items-center z-50 fixed top-0 w-full px-[30px] py-5 ">
             <div className="flex flex-row items-center gap-x-2">
-                <a href='/' className="h-[50px] w-[50px] rounded-full overflow-hidden">
+                <a href='/dscvr-canvas' className="h-[50px] w-[50px] rounded-full overflow-hidden">
                     <Image src="/quick.jpg" style={{ objectFit: 'cover' }} width={200} height={200} alt="logo" />
                 </a>
             </div>

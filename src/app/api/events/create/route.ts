@@ -1,7 +1,6 @@
 import { NETWORK, createEvent } from '@/app/utils/requestsHandler';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
-import pako from 'pako';
 
 
 export const GET = (req: Request) => {
@@ -19,6 +18,13 @@ export const GET = (req: Request) => {
                         href: `/api/events/create`,
                         label: 'Create Event',
                         "parameters": [
+                            {
+                                "name": "email_address", // field name
+                                "label": "enter your email address", // text input placeholder
+                                type: "email",
+                                required: true,
+
+                            },
                             {
                                 "name": "event_name", // field name
                                 "label": "enter name/title for your event", // text input placeholder
@@ -109,7 +115,7 @@ export const POST = async (req: Request) => {
 
         let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
         let walletAddress = new PublicKey(address);
-        const lamportsToSend = Number(0.025) * LAMPORTS_PER_SOL;
+        const lamportsToSend = Number(0.005) * LAMPORTS_PER_SOL;
 
         const transferTransaction = new Transaction().add(
             SystemProgram.transfer({
@@ -140,6 +146,7 @@ export const POST = async (req: Request) => {
                 data?.payment_address,
                 body.account,
                 data?.fee,
+                data?.email_address,
             );
 
         } catch (eventError: any) {

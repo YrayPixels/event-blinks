@@ -1,5 +1,5 @@
 import { NETWORK, createEvent, createEventTicket, fetchEvent } from '@/app/utils/requestsHandler'
-import { TransferUsdc } from '@/app/utils/web3Utils'
+import { TransferUsdc, ValidateTransfer } from '@/app/utils/web3Utils'
 import { Close, Menu } from '@material-ui/icons'
 import { PublicKey } from '@solana/web3.js'
 import Image from 'next/image'
@@ -11,17 +11,10 @@ export const TopNav = () => {
 
     const startEvent = async () => {
 
-        return;
-        let response = await createEventTicket(
-            "kjafakfjaf",
-            "afakfjakfa",
-            "9",
-            "httier",
-            "10",
-        );
 
-        console.log(response)
+        let res = await ValidateTransfer(0.5, "SOL", "7onFqyJuCtSzSARS4C1gMpitvdSVyowpCuEdSgVvZH97", "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ")
 
+        console.log(res);
 
     }
     return (

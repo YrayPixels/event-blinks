@@ -153,3 +153,90 @@ export const TransferSol = async (
 //         throw err;
 //     }
 // }
+
+export const ValidateTransfer = async (
+    amount: number,
+    paymentMethod: string,
+    fromWalletAddress: string,
+    toWalletAddress: string
+) => {
+    try {
+        // Network connection, can be replaced with an env variable
+        const connection = new Connection(NETWORK, 'confirmed');
+
+        // Validate input addresses
+        if (!toWalletAddress || !fromWalletAddress) {
+            return {
+                status: false,
+                message: "Wallet addresses cannot be null"
+            };
+        }
+
+        let toAddress: PublicKey;
+        let fromAddress: PublicKey;
+
+        try {
+            toAddress = new PublicKey(toWalletAddress);
+            fromAddress = new PublicKey(fromWalletAddress);
+        } catch (e) {
+            return { status: false, message: 'Invalid Wallet Address' };
+        }
+
+        // Get recent transaction signatures
+        const confirmedSignatureInfos = await connection.getConfirmedSignaturesForAddress2(toAddress, { limit: 10 });
+
+        // Iterate through the signatures and find the matching transaction
+        let transactionFound = false;
+        for (let sigInfo of confirmedSignatureInfos) {
+            const transaction = await connection.getParsedConfirmedTransaction(sigInfo.signature);
+            if (transaction) {
+                const instructions = transaction.transaction.message.instructions;
+
+                for (let instruction of instructions) {
+                    if (paymentMethod === 'SOL') {
+                        if (instruction.programId.equals(SystemProgram.programId) &&
+                            instruction.parsed.info.destination == toAddress &&
+                            instruction.parsed.info.source == fromAddress) {
+                            let lamp_Val = instruction.parsed.info.lamports;
+                            let convertedAmt = Number(lamp_Val) / LAMPORTS_PER_SOL;
+                            if (convertedAmt === amount) {
+                                transactionFound = true;
+                                return {
+                                    status: true,
+                                    message: 'Transfer found',
+                                    transactionHash: sigInfo.signature,
+                                    details: transaction
+                                };
+                            }
+                        }
+                    } else {
+                        // For SPL tokens like USDC
+                        if (instruction.programId.equals(TOKEN_PROGRAM_ID) &&
+                            instruction.parsed.info.tokenAddress == new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v') &&
+                            instruction.parsed.info.destination == toAddress &&
+                            instruction.parsed.info.source === fromAddress) {
+                            let tokenAmount = instruction.parsed.info.tokenAmount.uiAmount;
+                            if (tokenAmount === amount) {
+                                transactionFound = true;
+                                return {
+                                    status: true,
+                                    message: 'Transfer found',
+                                    transactionHash: sigInfo.signature,
+                                    details: transaction
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!transactionFound) {
+            return { status: false, message: 'No Transaction Found', };
+        }
+
+    } catch (error) {
+        console.error(error);
+        return { status: false, message: 'An Error Occurred', error };
+    }
+}

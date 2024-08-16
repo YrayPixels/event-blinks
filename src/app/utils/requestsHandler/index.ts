@@ -7,6 +7,20 @@ export const fetchEvent = async (eventId: string) => {
     return response;
 }
 
+export const fetchNullEvents = async () => {
+    let response = await request.get(`/get-null-events`);
+    return response;
+}
+
+export const updateEventTransaction = async (eventId: string, transaction_hash: string) => {
+    let bodyContent = new FormData();
+    bodyContent.append("event_id", eventId);
+    bodyContent.append("transaction_hash", transaction_hash);
+
+    let response = await request.post({ url: '/update-event-transactions', data: bodyContent })
+    return response;
+}
+
 export const getAllEvent = async () => {
     let response = await request.get(`/get-all-events`)
     return response;
@@ -29,8 +43,6 @@ export const confirmRegPayment = async (id: string) => {
 }
 
 
-
-
 export const fetchTickets = async (eventId: string) => {
     let response = await request.get(`/get-tickets-for-event/${eventId}`)
     return response;
@@ -47,6 +59,7 @@ export const createEvent = async (
     paymentAddress: string,
     owner: string,
     fee: string,
+    email: string
 ) => {
 
     let bodyContent = new FormData();
@@ -60,6 +73,7 @@ export const createEvent = async (
     bodyContent.append("payment_method", paymentMethod);
     bodyContent.append("payment_address", paymentAddress);
     bodyContent.append("owner", owner);
+    bodyContent.append("email_address", email);
 
 
 

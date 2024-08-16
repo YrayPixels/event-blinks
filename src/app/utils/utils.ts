@@ -28,4 +28,4 @@ export const decompressedUrl = async (stringUrl: any) => {
 
 }
 
-export const API_URL = process.env.NEXT_PUBLIC_ENVIROMENT == "development" ? "http://127.0.0.1:8000/api" : "http://ytechno.com.ng/api"
+export const API_URL = process.env.NEXT_PUBLIC_ENVIROMENT == "development" ? "http://127.0.0.1:8000/api" : "https://blinks.ytechno.com.ng/api"

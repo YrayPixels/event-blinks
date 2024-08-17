@@ -23,7 +23,7 @@ const BlinksWrapper = () => {
             return;
         }
 
-        setGeneratedAction(`${process.env.NEXT_PUBLIC_HOST_URL}/wrapper/actions?generated=${importedAction}`)
+        setGeneratedAction(`${process.env.NEXT_PUBLIC_HOST_URL}/blink-wrapper?generated=${importedAction}`)
         setNotify({
             message: 'Generated action URL successfully',
             type: 'success'

@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect, useMemo } from 'react'
 import '@dialectlabs/blinks/index.css';
-import { Action, Blink, ActionsRegistry, useAction } from "@dialectlabs/blinks";
+import { Action, Blink, ActionsRegistry, useAction, useActionsRegistryInterval } from "@dialectlabs/blinks";
 import { useActionSolanaWalletAdapter } from "@dialectlabs/blinks/hooks/solana"
 import { NETWORK } from '@/app/utils/requestsHandler';
 import { useSearchParams } from 'next/navigation'
@@ -16,6 +16,8 @@ const BlinksWrapper = () => {
         console.log('No action found');
         return <div>No action found</div>
     }
+
+    const { isRegistryLoaded } = useActionsRegistryInterval();
     // const [action, setAction] = useState<Action | null>(null);
     const actionApiUrl = actionItem;
     // useAction initiates registry, adapter and fetches the action.
@@ -51,7 +53,7 @@ const BlinksWrapper = () => {
             </button></div>
 
 
-            {actions.length > 0 && actions.map(action => (
+            {isRegistryLoaded && actions.length > 0 && actions.map(action => (
                 <div key={action.url} className="h-[100px]  w-8/12 md:w-6/12 lg:4/12 top-5 absolute">
                     <Blink stylePreset="default" action={action} websiteText={new URL(action.url).hostname} />
                 </div>

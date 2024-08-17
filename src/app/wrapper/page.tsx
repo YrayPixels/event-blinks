@@ -56,12 +56,14 @@ const BlinksWrapper = () => {
                 <input onChange={(event) => {
                     setImportedAction(event.target.value)
                 }} placeholder='paste your action get url' className='p-2 text-center border-white w-8/12  border rounded-xl  bg-black/10' />
-                <button onClick={() => generateActionUrl()} className='bg-white w-[200px] hover:bg-white/50 hover:text-white text-black p-2 shadow-lg rounded-xl'>
+                <button onClick={() => generateActionUrl()} className='bg-white  max-w-[200px] hover:bg-white/50 hover:text-white text-black p-2 shadow-lg rounded-xl'>
                     Generate
                 </button>
 
-                {generatedAction != '' && <div>
-                    <a className='text-center' href={generatedAction}>{generatedAction}</a>
+                {generatedAction != '' && <div className='w-screen text-wrap  flex flex-col space-y-4 justify-center items-center'>
+                    <a className='text-center w-full text-wrap' href={generatedAction}>{generatedAction.slice(0, 50)}...</a>
+
+                    <p>Copy generated link</p>
                 </div>
                 }
             </div>

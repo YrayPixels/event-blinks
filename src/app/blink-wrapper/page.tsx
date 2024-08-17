@@ -52,7 +52,7 @@ const BlinksWrapper = () => {
 
     // console.log(adapter, actionApiUrl, action);
     return (
-        <div className='bg-[url("/grid_bg.png")] border py-5 flex flex-row justify-center items-center'>
+        <div className='bg-[url("/grid_bg.png")]  py-5 flex flex-row justify-center items-center'>
             {isRegistryLoaded && actions.length > 0 && actions.map(action => (
                 <div key={action.url} className="bg-[url('/grid_bg.png')] w-11/12 md:w-5/12 lg:4/12 ">
                     <Blink stylePreset="x-dark" action={action} websiteText={new URL(action.url).hostname} />

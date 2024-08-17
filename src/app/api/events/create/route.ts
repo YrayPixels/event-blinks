@@ -7,7 +7,7 @@ export const GET = (req: Request) => {
     try {
         const url = new URL(req.url);
         const payload = {
-            icon: `${process.env.NEXT_PUBLIC_HOST_URL}/events.png`,
+            icon: `${process.env.HOST_URL}/events.png`,
             title: "Create Quick Events With Blinks",
             description: "Create and manage your events and events Items directly from blinks, get access to the number of those that have purchased your tickets and registered for your events directly from your blinks.",
             label: `Create Event`,

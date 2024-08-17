@@ -39,7 +39,7 @@ export const GET = async (req: Request) => {
             links: {
                 actions: [
                     {
-                        href: `${process.env.NEXT_PUBLIC_HOST_URL}/api/events/create-tickets?event-id=${eventId}`,
+                        href: `${process.env.HOST_URL}/api/events/create-tickets?event-id=${eventId}`,
                         label: `Create Tickets`,
                         "parameters": [
                             {

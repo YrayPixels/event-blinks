@@ -17,10 +17,7 @@ const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
     const decompressedRe = pako.ungzip(compressedRe);
     // Step 3: Convert buffer to string
     const actionItem = Buffer.from(decompressedRe).toString('utf-8');
-    // const { client, user, content, isReady } = useCanvasClient();
 
-    console.log(actionItem);
-    // useResizeObserver(client);
     const { isRegistryLoaded } = useActionsRegistryInterval();
     // const [action, setAction] = useState<Action | null>(null);
     const actionApiUrl = actionItem;

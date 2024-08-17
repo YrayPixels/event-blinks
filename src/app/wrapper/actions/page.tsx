@@ -46,13 +46,13 @@ const BlinksWrapper = () => {
     // console.log(adapter, actionApiUrl, action);
     return (
         <div className='bg-[url("/grid_bg.png")] h-screen flex flex-row justify-center items-center'>
-            <div className='absolute top-5 right-10 z-50'> <button onClick={() => { }} className='bg-white hover:bg-white/50 hover:text-white text-black p-2 shadow-lg rounded-xl'>
-                Connect Dscvr
+            <div className='fixed top-10 right-10 z-50'> <button onClick={() => { }} className='bg-[#322e59] hover:bg-white/50 hover:text-black text-white p-2 shadow-lg rounded-xl'>
+                Connect with Dscvr
             </button></div>
 
 
             {actions.length > 0 && actions.map(action => (
-                <div key={action.url} className="h-[100px] w-8/12 top-5 absolute">
+                <div key={action.url} className="h-[100px]  w-8/12 md:w-4/12 top-5 absolute">
                     <Blink stylePreset="default" action={action} websiteText={new URL(action.url).hostname} />
                 </div>
             ))}

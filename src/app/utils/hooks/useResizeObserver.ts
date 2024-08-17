@@ -6,7 +6,12 @@ export function useResizeObserver(canvasClient: CanvasClient | undefined) {
 
   useEffect(() => {
     if (canvasClient) {
-      resizeObserverRef.current = new ResizeObserver(() => canvasClient.resize());
+      resizeObserverRef.current = new ResizeObserver(() => canvasClient.resize(
+        {
+          width: 600, //doesnt do anything yet
+          height: document.body.clientHeight // might need to grab the height of something else
+        }
+      ));
       resizeObserverRef.current.observe(document.body);
 
       return () => {

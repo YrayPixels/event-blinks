@@ -22,7 +22,6 @@ const BlinksWrapper = () => {
     const { client, user, content, isReady } = useCanvasClient();
     useResizeObserver(client);
 
-
     const { isRegistryLoaded } = useActionsRegistryInterval();
     // const [action, setAction] = useState<Action | null>(null);
     const actionApiUrl = actionItem;

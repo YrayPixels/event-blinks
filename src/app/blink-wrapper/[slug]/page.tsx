@@ -22,7 +22,6 @@ const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
 
     const { isRegistryLoaded } = useActionsRegistryInterval();
     // const [action, setAction] = useState<Action | null>(null);
-    const actionApiUrl = actionItem;
 
 
 
@@ -46,14 +45,13 @@ const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
         };
 
         setIsInIframe(iframe);
-        // const adapter = iframe ? adapter : undefined;
+        const adapterTool = iframe ? adapter : undefined;
 
         const fetchAction = async () => {
             // const url = new URL(window.location.href);
-
             // const actionParam = url.searchParams.get('action') ?? 'https://blink-chat.xyz/api/actions/chat';
 
-            const actionParam = actionApiUrl;
+            const actionParam = actionItem;
 
             if (actionParam) {
                 try {
@@ -64,7 +62,7 @@ const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
 
                     const action = await Action.fetch(
                         actionParam,
-                        adapter
+                        adapterTool
                     );
                     setAction(action);
                 } catch (error) {
@@ -105,18 +103,7 @@ const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
         width: '100%'
     };
 
-
-    // console.log(adapter, actionApiUrl, action);
     return (
-        // <div className='bg-[url("/grid_bg.png")]  py-5 flex flex-row justify-center items-center'>
-        //     {isRegistryLoaded && action && (
-        //         <div key={action.url} className="bg-[url('/grid_bg.png')] sm:w-10/12 w-8/12 md:w-5/12 lg:4/12 ">
-        //             <Blink stylePreset="x-dark" action={action} websiteText={new URL(action.url).hostname} />
-        //         </div>
-        //     )}
-
-        // </div>
-
         <div className='bg-[url("/grid_bg.png")]  py-5 flex flex-row justify-center items-center'>
             <div ref={containerRef} style={containerStyle}>
                 {isRegistryLoaded && action && (

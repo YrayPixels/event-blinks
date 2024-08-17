@@ -23,7 +23,7 @@ const BlinksWrapper = () => {
             return;
         }
 
-        setGeneratedAction(`https://quick-blinks.xyz/wrapper/actions?generated=${importedAction}`)
+        setGeneratedAction(`${process.env.NEXT_PUBLIC_HOST_URL}/wrapper/actions?generated=${importedAction}`)
         setNotify({
             message: 'Generated action URL successfully',
             type: 'success'
@@ -53,7 +53,7 @@ const BlinksWrapper = () => {
                 </button>
 
                 {generatedAction != '' && <div>
-                    <a className='text-center' href={generatedAction}>{generatedAction}</a>
+                    <a target="_blank" className='text-center' href={generatedAction}>{generatedAction}</a>
                 </div>
                 }
             </div>

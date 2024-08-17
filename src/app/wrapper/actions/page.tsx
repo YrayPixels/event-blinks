@@ -1,65 +1,61 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import '@dialectlabs/blinks/index.css';
 import { Action, Blink, ActionsRegistry, useAction } from "@dialectlabs/blinks";
 import { useActionSolanaWalletAdapter } from "@dialectlabs/blinks/hooks/solana"
-import { Connection } from '@solana/web3.js';
 import { NETWORK } from '@/app/utils/requestsHandler';
 import { useSearchParams } from 'next/navigation'
 import { CanvasClient, CanvasInterface } from '@dscvr-one/canvas-client-sdk';
 import { registerCanvasWallet } from '@dscvr-one/canvas-wallet-adapter';
+import '@dialectlabs/blinks/index.css';
 
 const BlinksWrapper = () => {
     const searchParams = useSearchParams()
-
     const actionItem = searchParams.get('generated')
     if (actionItem == null) {
         console.log('No action found');
         return <div>No action found</div>
     }
     // const [action, setAction] = useState<Action | null>(null);
-    const connection = new Connection(NETWORK, "confirmed");
-    const { adapter } = useActionSolanaWalletAdapter(connection);
     const actionApiUrl = actionItem;
+    // useAction initiates registry, adapter and fetches the action.
+    const { adapter } = useActionSolanaWalletAdapter(NETWORK);
 
 
-    const { action } = useAction({ url: actionApiUrl || "", adapter });
+    const apiUrls = useMemo(() => ([actionApiUrl]), []);
+    const [actions, setActions] = useState<Action[]>([]);
 
-    console.log(action, actionApiUrl);
-    // useEffect(() => {
-    //     (async () => {
-    //         const canvasClient = new CanvasClient();
-    //         // registerCanvasWallet(canvasClient);
-    //         const response = await canvasClient.ready();
-    //         console.log('Canvas client ready', response);
+    useEffect(() => {
+        const fetchActions = async () => {
+            const promises = apiUrls.map(url => Action.fetch(url).catch(() => null));
+            const actions = await Promise.all(promises);
 
-    //         if (response) {
-    //             // if ("Handshake" in CanvasInterface) {
-    //             //     // The handshake allows access to the user and the content that the application is embedded in.
-    //             //     const user: CanvasInterface.Handshake.User = response.untrusted.user;
-    //             //     const content: CanvasInterface.Handshake.Content = response.untrusted.content;
-    //             //     // ...
-    //             // }
-    //         }
+            setActions(actions.filter(Boolean) as Action[]);
+        }
 
-    //     })()
-    // }, [])
+        fetchActions();
+    }, [apiUrls]);
 
-    const connectDscvr = async () => {
-        console.log('clicked');
-        alert('clicked');
-    }
+    // we need to update the adapter every time, since it's dependent on wallet and walletModal states
+    useEffect(() => {
+        actions.forEach((action) => action.setAdapter(adapter));
+    }, [actions, adapter]);
+
+
+
+    // console.log(adapter, actionApiUrl, action);
     return (
         <div className='bg-[url("/grid_bg.png")] h-screen flex flex-row justify-center items-center'>
-            <div className='absolute top-5 right-10'> <button onClick={() => connectDscvr()} className='bg-white hover:bg-white/50 hover:text-white text-black p-2 shadow-lg rounded-xl'>
+            <div className='absolute top-5 right-10 z-50'> <button onClick={() => { }} className='bg-white hover:bg-white/50 hover:text-white text-black p-2 shadow-lg rounded-xl'>
                 Connect Dscvr
             </button></div>
-            <div className='flex flex-col justify-center items-center space-y-6'>
 
 
-                {action ? <Blink action={action} websiteText={new URL(actionApiUrl).hostname} /> : null}
-
-            </div>
+            {actions.length > 0 && actions.map(action => (
+                <div key={action.url} className="h-[100px] w-8/12 top-5 absolute">
+                    <Blink stylePreset="default" action={action} websiteText={new URL(action.url).hostname} />
+                </div>
+            ))}
 
         </div>
     )

@@ -13,7 +13,10 @@ const nextConfig = {
             });
         }
         return config;
-    }
+    },
+    experimental: {
+        missingSuspenseWithCSRBailout: false,
+    },
 };
 
 export default nextConfig;

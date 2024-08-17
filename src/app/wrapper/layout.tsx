@@ -4,7 +4,7 @@ import "./../style.css";
 import AppWalletProvider from "@/components/walletAdapter/AppWalletProvider";
 
 export const metadata: Metadata = {
-  title: "Blinks Wrapper",
+  title: "DSCVR Blinks Wrapper",
   description: "QuickBlinks provide instant Solana Actions to no-code users: Port Your blinks to DSCVR using our tool!.",
 };
 

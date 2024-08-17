@@ -1,11 +1,13 @@
 "use client"
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import '@dialectlabs/blinks/index.css';
-import { Action, Blink, ActionsRegistry, useAction, useActionsRegistryInterval } from "@dialectlabs/blinks";
+import { Action, Blink, ActionsRegistry, useAction, useActionsRegistryInterval, ActionContainer } from "@dialectlabs/blinks";
 import { useActionSolanaWalletAdapter } from "@dialectlabs/blinks/hooks/solana"
 import { NETWORK } from '@/app/utils/requestsHandler';
 import '@dialectlabs/blinks/index.css';
 import pako from 'pako';
+import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
+import { isIframe } from '@/app/utils/blinkWrapper/canvas-adapter';
 
 
 const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
@@ -21,35 +23,115 @@ const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
     const { isRegistryLoaded } = useActionsRegistryInterval();
     // const [action, setAction] = useState<Action | null>(null);
     const actionApiUrl = actionItem;
+
+
+
     // useAction initiates registry, adapter and fetches the action.
     const { adapter } = useActionSolanaWalletAdapter(NETWORK);
 
-    const [action, setAction] = useState<Action | null>(null)
+
+
+    const [action, setAction] = useState<Action | null>(null);
+    const [_, setIsInIframe] = useState(false);
+    const [websiteUrl, setWebsiteUrl] = useState("");
+    const [websiteText, setWebsiteText] = useState("");
+    const containerRef = useRef<HTMLDivElement>(null);
+    const canvasClientRef = useRef<CanvasClient | undefined>();
+
     useEffect(() => {
-        const fetchActions = async () => {
-            let action = await Action.fetch(actionApiUrl).catch(() => null);
-            setAction(action)
+        const iframe = isIframe();
+
+        if (iframe) {
+            canvasClientRef.current = new CanvasClient();
+        };
+
+        setIsInIframe(iframe);
+        // const adapter = iframe ? adapter : undefined;
+
+        const fetchAction = async () => {
+            // const url = new URL(window.location.href);
+
+            // const actionParam = url.searchParams.get('action') ?? 'https://blink-chat.xyz/api/actions/chat';
+
+            const actionParam = actionApiUrl;
+
+            if (actionParam) {
+                try {
+                    const actionUrl = new URL(actionParam);
+
+                    setWebsiteUrl(actionUrl.toString());
+                    setWebsiteText(actionUrl.host);
+
+                    const action = await Action.fetch(
+                        actionParam,
+                        adapter
+                    );
+                    setAction(action);
+                } catch (error) {
+                    console.error("Invalid action URL:", error);
+                }
+            } else {
+                console.error("No action parameter provided in URL");
+            }
+        };
+        fetchAction();
+
+        const resizeObserver = new ResizeObserver((_) => {
+            canvasClientRef?.current?.resize();
+        });
+
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current);
         }
-        fetchActions();
-    }, [actionApiUrl]);
 
-    // we need to update the adapter every time, since it's dependent on wallet and walletModal states
-    useEffect(() => {
-        action?.setAdapter(adapter);
-    }, [action, adapter]);
+        return () => {
+            if (containerRef.current) {
+                resizeObserver.unobserve(containerRef.current);
+            }
+        };
+    }, []);
 
+    const exampleCallbacks = {
+        onActionMount: (action: any, url: any, actionState: any) => {
+            console.log("Action mounted:", action, url, actionState);
+        },
+    };
+
+    const exampleSecurityLevel = "only-trusted";
+
+    const containerStyle = {
+        maxWidth: '450px',
+        margin: '0 auto',
+        width: '100%'
+    };
 
 
     // console.log(adapter, actionApiUrl, action);
     return (
-        <div className='bg-[url("/grid_bg.png")]  py-5 flex flex-row justify-center items-center'>
-            {isRegistryLoaded && action && (
-                <div key={action.url} className="bg-[url('/grid_bg.png')] sm:w-10/12 w-8/12 md:w-5/12 lg:4/12 ">
-                    <Blink stylePreset="x-dark" action={action} websiteText={new URL(action.url).hostname} />
-                </div>
-            )}
+        // <div className='bg-[url("/grid_bg.png")]  py-5 flex flex-row justify-center items-center'>
+        //     {isRegistryLoaded && action && (
+        //         <div key={action.url} className="bg-[url('/grid_bg.png')] sm:w-10/12 w-8/12 md:w-5/12 lg:4/12 ">
+        //             <Blink stylePreset="x-dark" action={action} websiteText={new URL(action.url).hostname} />
+        //         </div>
+        //     )}
 
+        // </div>
+
+        <div className='bg-[url("/grid_bg.png")]  py-5 flex flex-row justify-center items-center'>
+            <div ref={containerRef} style={containerStyle}>
+                {isRegistryLoaded && action && (
+                    <ActionContainer
+                        action={action}
+                        websiteUrl={websiteUrl}
+                        websiteText={websiteText}
+                        callbacks={exampleCallbacks}
+                        securityLevel={exampleSecurityLevel}
+                        stylePreset="x-dark"
+                    />
+                )}
+            </div>
         </div>
+
     )
 }
 export default BlinksWrapper

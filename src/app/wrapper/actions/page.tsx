@@ -52,7 +52,7 @@ const BlinksWrapper = () => {
 
 
             {actions.length > 0 && actions.map(action => (
-                <div key={action.url} className="h-[100px]  w-8/12 md:w-4/12 top-5 absolute">
+                <div key={action.url} className="h-[100px]  w-8/12 md:w-6/12 lg:4/12 top-5 absolute">
                     <Blink stylePreset="default" action={action} websiteText={new URL(action.url).hostname} />
                 </div>
             ))}

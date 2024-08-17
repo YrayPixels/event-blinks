@@ -11,7 +11,6 @@ import { registerCanvasWallet } from '@dscvr-one/canvas-wallet-adapter';
 
 const BlinksWrapper = () => {
     const searchParams = useSearchParams()
-    console.log(searchParams);
 
     const actionItem = searchParams.get('generated')
     if (actionItem == null) {
@@ -23,8 +22,10 @@ const BlinksWrapper = () => {
     const { adapter } = useActionSolanaWalletAdapter(connection);
     const actionApiUrl = actionItem;
 
+
     const { action } = useAction({ url: actionApiUrl || "", adapter });
 
+    console.log(action, actionApiUrl);
     // useEffect(() => {
     //     (async () => {
     //         const canvasClient = new CanvasClient();

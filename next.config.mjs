@@ -2,6 +2,7 @@
 const nextConfig = {
     output: "export",
     reactStrictMode: true,
+    images: { unoptimized: true },
     webpack: (config, { dev }) => {
         if (dev) {
             Object.defineProperty(config, 'devtool', {

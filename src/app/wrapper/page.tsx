@@ -53,7 +53,7 @@ const BlinksWrapper = () => {
                 </button>
 
                 {generatedAction != '' && <div>
-                    <a href={generatedAction}>{generatedAction}</a>
+                    <a className='text-center' href={generatedAction}>{generatedAction}</a>
                 </div>
                 }
             </div>

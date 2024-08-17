@@ -8,6 +8,8 @@ import { useSearchParams } from 'next/navigation'
 import { CanvasClient, CanvasInterface } from '@dscvr-one/canvas-client-sdk';
 import { registerCanvasWallet } from '@dscvr-one/canvas-wallet-adapter';
 import '@dialectlabs/blinks/index.css';
+import { useResizeObserver } from '../utils/hooks/useResizeObserver';
+import { useCanvasClient } from '../utils/hooks/useCanvasClient';
 
 const BlinksWrapper = () => {
     const searchParams = useSearchParams()
@@ -16,6 +18,10 @@ const BlinksWrapper = () => {
         console.log('No action found');
         return <div>No action found</div>
     }
+
+    const { client, user, content, isReady } = useCanvasClient();
+    useResizeObserver(client);
+
 
     const { isRegistryLoaded } = useActionsRegistryInterval();
     // const [action, setAction] = useState<Action | null>(null);

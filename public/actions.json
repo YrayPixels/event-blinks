@@ -1,7 +1,7 @@
 {
     "rules": [
         {
-            "pathPattern": "/wrapper/*",
+            "pathPattern": "/api/*",
             "apiPath": "https://www.quick-blinks.xyz/api/*"
         }
     ]

@@ -21,7 +21,7 @@ export default function Home() {
                         <h1 className="text-[40px] text-center w-8/12 m-auto text-flicker font-bold">Event Creation and Management is Live on Dscvr!</h1>
                         <p className="text-center text-[16px]">Create, manage, and sell tickets for your events with our no-code platform, powered by Solana blockchain.</p>
                         <div className="my-2 flex flex-row justify-center items-center">
-                            <a target="_blank" href={`https://dial.to/devnet?action=solana-action:${process.env.NEXT_PUBLIC_HOST_URL}/api/events/create`} className="px-10 py-3 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8] cta-button ">Connect Dscvr</a>
+                            <a target="_blank" href={`${process.env.NEXT_PUBLIC_HOST_URL}/blink-wrapper?generated=${process.env.NEXT_PUBLIC_HOST_URL}/api/events/create`} className="px-10 py-3 text-white rounded-xl bg-[#ED3A4F] hover:bg-[#60DEE8] cta-button ">Connect Dscvr</a>
                         </div>
                     </div>
                     <div className="hero-image">

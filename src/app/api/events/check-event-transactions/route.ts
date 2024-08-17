@@ -14,7 +14,7 @@ export const GET = async (req: Request) => {
         let validated = [];
 
         for (let event of events?.data) {
-            let res = await ValidateTransfer(Number(process.env.CREATE_FEE), "SOL", event.owner, process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ")
+            let res = await ValidateTransfer(Number(process.env.NEXT_PUBLIC_CREATE_FEE), "SOL", event.owner, process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ")
 
             if (res?.status && res?.transactionHash) {
 

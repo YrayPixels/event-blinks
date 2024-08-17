@@ -1,8 +1,8 @@
 {
     "rules": [
         {
-            "pathPattern": "/donate/*",
-            "apiPath": "https://api.dialect.com/api/v1/donate/*"
+            "pathPattern": "/wrapper/*",
+            "apiPath": "https://www.quick-blinks.xyz/api/*"
         }
     ]
 }

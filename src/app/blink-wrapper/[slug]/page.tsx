@@ -18,6 +18,8 @@ const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
     // Step 3: Convert buffer to string
     const actionItem = Buffer.from(decompressedRe).toString('utf-8');
     // const { client, user, content, isReady } = useCanvasClient();
+
+    console.log(actionItem);
     // useResizeObserver(client);
     const { isRegistryLoaded } = useActionsRegistryInterval();
     // const [action, setAction] = useState<Action | null>(null);
@@ -25,36 +27,30 @@ const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
     // useAction initiates registry, adapter and fetches the action.
     const { adapter } = useActionSolanaWalletAdapter(NETWORK);
 
-    const apiUrls = useMemo(() => ([actionApiUrl]), []);
-    const [actions, setActions] = useState<Action[]>([]);
-
+    const [action, setAction] = useState<Action | null>(null)
     useEffect(() => {
         const fetchActions = async () => {
-            const promises = apiUrls.map(url => Action.fetch(url).catch(() => null));
-            const actions = await Promise.all(promises);
-
-            setActions(actions.filter(Boolean) as Action[]);
+            let action = await Action.fetch(actionApiUrl).catch(() => null);
+            setAction(action)
         }
-
         fetchActions();
-    }, [apiUrls]);
+    }, [actionApiUrl]);
 
     // we need to update the adapter every time, since it's dependent on wallet and walletModal states
     useEffect(() => {
-        actions.forEach((action) => action.setAdapter(adapter));
-    }, [actions, adapter]);
+        action?.setAdapter(adapter);
+    }, [action, adapter]);
 
 
 
     // console.log(adapter, actionApiUrl, action);
     return (
         <div className='bg-[url("/grid_bg.png")]  py-5 flex flex-row justify-center items-center'>
-            {isRegistryLoaded && actions.length > 0 && actions.map(action => (
-                <div>{action.url}</div>
-                // <div key={action.url} className="bg-[url('/grid_bg.png')] sm:w-10/12 w-8/12 md:w-5/12 lg:4/12 ">
-                //     <Blink stylePreset="x-dark" action={action} websiteText={new URL(action.url).hostname} />
-                // </div>
-            ))}
+            {isRegistryLoaded && action && (
+                <div key={action.url} className="bg-[url('/grid_bg.png')] sm:w-10/12 w-8/12 md:w-5/12 lg:4/12 ">
+                    <Blink stylePreset="x-dark" action={action} websiteText={new URL(action.url).hostname} />
+                </div>
+            )}
 
         </div>
     )

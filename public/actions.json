@@ -1,8 +1,0 @@
-{
-    "rules": [
-        {
-            "pathPattern": "/api/*",
-            "apiPath": "https://www.quick-blinks.xyz/api/*"
-        }
-    ]
-}

@@ -1,5 +1,7 @@
 "use client"
 import React, { useState } from 'react'
+import { useCanvasClient } from '../utils/hooks/useCanvasClient';
+import { useResizeObserver } from '../utils/hooks/useResizeObserver';
 
 const BlinksWrapper = () => {
     const [importedAction, setImportedAction] = useState('')
@@ -8,6 +10,10 @@ const BlinksWrapper = () => {
         message: '',
         type: ''
     })
+
+    const { client, user, content, isReady } = useCanvasClient();
+    useResizeObserver(client);
+
     const generateActionUrl = () => {
         if (importedAction == "") {
             setNotify({

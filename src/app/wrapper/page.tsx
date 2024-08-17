@@ -52,7 +52,7 @@ const BlinksWrapper = () => {
             }
             <div className='flex flex-col justify-center items-center space-y-6'>
 
-                <h1 className='text-[40px]'>Import your existing blinks with a click!</h1>
+                <h1 className='sm:text-[16px] text-[20px] md:text-[40px]'>Import your existing blinks with a click!</h1>
                 <input onChange={(event) => {
                     setImportedAction(event.target.value)
                 }} placeholder='paste your action get url' className='p-2 text-center border-white w-8/12  border rounded-xl  bg-black/10' />
@@ -63,7 +63,7 @@ const BlinksWrapper = () => {
                 {generatedAction != '' && <div className='w-screen text-wrap  flex flex-col space-y-4 justify-center items-center'>
                     <a className='text-center w-full text-wrap' href={generatedAction}>{generatedAction.slice(0, 50)}...</a>
 
-                    <p>Copy generated link</p>
+                    {/* <p>Copy generated link</p> */}
                 </div>
                 }
             </div>

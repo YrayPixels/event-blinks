@@ -4,36 +4,26 @@ import '@dialectlabs/blinks/index.css';
 import { Action, Blink, ActionsRegistry, useAction, useActionsRegistryInterval } from "@dialectlabs/blinks";
 import { useActionSolanaWalletAdapter } from "@dialectlabs/blinks/hooks/solana"
 import { NETWORK } from '@/app/utils/requestsHandler';
-import { useSearchParams } from 'next/navigation'
-import { CanvasClient, CanvasInterface } from '@dscvr-one/canvas-client-sdk';
-import { registerCanvasWallet } from '@dscvr-one/canvas-wallet-adapter';
 import '@dialectlabs/blinks/index.css';
-import { useResizeObserver } from '../../utils/hooks/useResizeObserver';
-import { useCanvasClient } from '../../utils/hooks/useCanvasClient';
 import pako from 'pako';
 
 
 const BlinksWrapper = ({ params }: { params: { slug: string } }) => {
 
     let adjusted = params.slug
-
     // Step 1: Decode base64 to buffer
     const compressedRe = Buffer.from(adjusted, 'base64');
-
     // Step 2: Unzip the buffer
     const decompressedRe = pako.ungzip(compressedRe);
-
     // Step 3: Convert buffer to string
     const actionItem = Buffer.from(decompressedRe).toString('utf-8');
     // const { client, user, content, isReady } = useCanvasClient();
     // useResizeObserver(client);
-
     const { isRegistryLoaded } = useActionsRegistryInterval();
     // const [action, setAction] = useState<Action | null>(null);
     const actionApiUrl = actionItem;
     // useAction initiates registry, adapter and fetches the action.
     const { adapter } = useActionSolanaWalletAdapter(NETWORK);
-
 
     const apiUrls = useMemo(() => ([actionApiUrl]), []);
     const [actions, setActions] = useState<Action[]>([]);

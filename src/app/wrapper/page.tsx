@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import pako from 'pako';
 import { isIframe } from '../utils/hooks/canvas-adapter';
 import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
+import { CopyAll } from '@mui/icons-material'
 
 const BlinksWrapper = () => {
     const [importedAction, setImportedAction] = useState('')
@@ -38,6 +39,16 @@ const BlinksWrapper = () => {
     }, [])
 
 
+    function copyClip(text: string) {
+        navigator.clipboard.writeText(text);
+        setNotify({ type: 'success', message: 'Text Copied to Clipboard' });
+        setTimeout(() => {
+            setNotify({
+                message: "",
+                type: ''
+            })
+        }, 2000)
+    }
 
     const generateActionUrl = () => {
         if (importedAction == "") {
@@ -95,10 +106,11 @@ const BlinksWrapper = () => {
                     Generate
                 </button>
 
-                {generatedAction != '' && <div className='w-screen text-wrap  flex flex-col space-y-4 justify-center items-center'>
-                    <a className='text-center w-full text-wrap' href={generatedAction}>{generatedAction.slice(0, 50)}...</a>
-
-                    {/* <p>Copy generated link</p> */}
+                {generatedAction != '' && <div className='w-screen flex flex-row space-y-4 justify-center items-center'>
+                    <div className='flex gap-x-4'>
+                        <a className='text-wrap' href={generatedAction}>{generatedAction.slice(0, 50)}...</a>
+                        <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] -top-5' />
+                    </div>
                 </div>
                 }
             </div>

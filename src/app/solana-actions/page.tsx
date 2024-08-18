@@ -1,10 +1,8 @@
 "use client"
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import '@dialectlabs/blinks/index.css';
 import { Action, Blink, ActionsRegistry, ActionContainer } from "@dialectlabs/blinks";
-
-import { NETWORK } from '@/app/utils/requestsHandler';
 import '@dialectlabs/blinks/index.css';
+import '../blink.css';
 import { CanvasAdapter, isIframe } from '../utils/hooks/canvas-adapter';
 import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
 

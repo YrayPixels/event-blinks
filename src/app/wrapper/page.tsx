@@ -31,7 +31,7 @@ const BlinksWrapper = () => {
         // //To Base64
         // const base64Encoded = Buffer.from(compressed).toString('base64');
 
-        setGeneratedAction(`${process.env.NEXT_PUBLIC_HOST_URL}/solana-actions?action=${importedAction}`);
+        setGeneratedAction(`https://dscvr-blinks.vercel.app?action=${importedAction}`);
         setNotify({
             message: 'Generated action URL successfully',
             type: 'success'

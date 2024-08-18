@@ -1,10 +1,10 @@
 "use client"
-import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { Action, Blink, ActionsRegistry, ActionContainer } from "@dialectlabs/blinks";
+import React, { useState, useEffect, useRef } from 'react'
 import '@dialectlabs/blinks/index.css';
 import '../blink.css';
 import { CanvasAdapter, isIframe } from '../utils/hooks/canvas-adapter';
 import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
+import { Action, ActionContainer } from '@dialectlabs/blinks';
 
 
 const BlinksWrapper = () => {
@@ -15,13 +15,8 @@ const BlinksWrapper = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasClientRef = useRef<CanvasClient | undefined>();
 
-    // const { isRegistryLoaded } = useActionsRegistryInterval();
-    // const { adapter } = useActionSolanaWalletAdapter(NETWORK);
-
-
     useEffect(() => {
         const iframe = isIframe();
-
         if (iframe) {
             canvasClientRef.current = new CanvasClient();
         };
@@ -84,22 +79,18 @@ const BlinksWrapper = () => {
         width: '100%'
     };
 
-
-    // console.log(adapter, actionApiUrl, action);
     return (
-        <div className='bg-[url("/grid_bg.png")]  py-5 flex flex-row justify-center items-center'>
-            <div ref={containerRef} style={containerStyle}>
-                {action && (
-                    <ActionContainer
-                        action={action}
-                        websiteUrl={websiteUrl}
-                        websiteText={websiteText}
-                        callbacks={exampleCallbacks}
-                        securityLevel={exampleSecurityLevel}
-                        stylePreset="x-dark"
-                    />
-                )}
-            </div>
+        <div ref={containerRef} style={containerStyle}>
+            {action && (
+                <ActionContainer
+                    action={action}
+                    websiteUrl={websiteUrl}
+                    websiteText={websiteText}
+                    callbacks={exampleCallbacks}
+                    securityLevel={exampleSecurityLevel}
+                    stylePreset="x-dark"
+                />
+            )}
         </div>
     )
 }

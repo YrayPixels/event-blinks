@@ -1,14 +1,41 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import pako from 'pako';
+import { isIframe } from '../utils/hooks/canvas-adapter';
+import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
 
 const BlinksWrapper = () => {
     const [importedAction, setImportedAction] = useState('')
     const [generatedAction, setGeneratedAction] = useState('');
+    const canvasClientRef = useRef<CanvasClient | undefined>();
+    const [_, setIsInIframe] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
     const [notify, setNotify] = useState({
         message: '',
         type: ''
     })
+    const iframe = isIframe();
+
+    useEffect(() => {
+        if (iframe) {
+            canvasClientRef.current = new CanvasClient();
+        };
+        setIsInIframe(iframe);
+
+        const resizeObserver = new ResizeObserver((_) => {
+            canvasClientRef?.current?.resize();
+        });
+
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current);
+        }
+
+        return () => {
+            if (containerRef.current) {
+                resizeObserver.unobserve(containerRef.current);
+            }
+        };
+    }, [])
 
 
     const generateActionUrl = () => {
@@ -44,7 +71,7 @@ const BlinksWrapper = () => {
         }, 2000)
     }
     return (
-        <div className='bg-[url("/grid_bg.png")] h-screen flex flex-col justify-center items-center'>
+        <div ref={containerRef} className='bg-[url("/grid_bg.png")] h-screen flex flex-col justify-center items-center'>
             {notify.type !== '' &&
                 <div className={`${notify.type == "success" ? 'bg-green-500' : "bg-red-500"} w-[400px] rounded-lg  p-2 absolute top-20`}>
                     <p className='text-center'>{notify.message}</p>
@@ -73,3 +100,5 @@ const BlinksWrapper = () => {
     )
 }
 export default BlinksWrapper
+
+

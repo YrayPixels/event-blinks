@@ -26,12 +26,12 @@ const BlinksWrapper = () => {
             return;
         }
 
-        //To Gzip
-        const compressed = pako.gzip(importedAction);
-        //To Base64
-        const base64Encoded = Buffer.from(compressed).toString('base64');
+        // //To Gzip
+        // const compressed = pako.gzip(importedAction);
+        // //To Base64
+        // const base64Encoded = Buffer.from(compressed).toString('base64');
 
-        setGeneratedAction(`${process.env.NEXT_PUBLIC_HOST_URL}/blink-wrapper/${base64Encoded}`)
+        setGeneratedAction(`${process.env.NEXT_PUBLIC_HOST_URL}/solana-actions?action=${importedAction}`);
         setNotify({
             message: 'Generated action URL successfully',
             type: 'success'

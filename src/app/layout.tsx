@@ -17,10 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <!-- Indicates that the application is a Canvas --> */}
-      {/* <meta name="dscvr:canvas:version" content="vNext" /> */}
-      {/* <!-- Open Graph Image for previewing the Canvas --> */}
-      {/* <meta name="og:image" content={`${process.env.NEXT_PUBLIC_HOST_URL}/blinkwrapper.png`} /> */}
+
       <body>{children}</body>
     </html>
   );

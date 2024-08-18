@@ -38,6 +38,7 @@ const BlinksWrapper = () => {
     }, [])
 
 
+
     const generateActionUrl = () => {
         if (importedAction == "") {
             setNotify({
@@ -70,8 +71,15 @@ const BlinksWrapper = () => {
             })
         }, 2000)
     }
+
+    const containerStyle = {
+        maxWidth: '450px',
+        margin: '0 auto',
+        width: '100%',
+        height: '600px',
+    };
     return (
-        <div ref={containerRef} className='bg-[url("/grid_bg.png")] h-screen flex flex-col justify-center items-center'>
+        <div ref={containerRef} style={containerStyle} className='bg-[url("/grid_bg.png")] flex flex-col justify-center items-center'>
             {notify.type !== '' &&
                 <div className={`${notify.type == "success" ? 'bg-green-500' : "bg-red-500"} w-[400px] rounded-lg  p-2 absolute top-20`}>
                     <p className='text-center'>{notify.message}</p>
@@ -79,7 +87,7 @@ const BlinksWrapper = () => {
             }
             <div className='flex flex-col justify-center items-center space-y-6'>
 
-                <h1 className='sm:text-[16px] text-[20px] md:text-[40px]'>Import your existing blinks with a click!</h1>
+                <h1 className='sm:text-[16px] text-center text-[20px] md:text-[40px]'>Import your existing blinks with a click!</h1>
                 <input onChange={(event) => {
                     setImportedAction(event.target.value)
                 }} placeholder='paste your action get url' className='p-2 text-center border-white w-8/12  border rounded-xl  bg-black/10' />

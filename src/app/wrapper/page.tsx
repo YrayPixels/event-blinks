@@ -5,6 +5,12 @@ import { isIframe } from '../utils/hooks/canvas-adapter';
 import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
 import { CopyAll } from '@mui/icons-material'
 
+const containerStyle = {
+    maxWidth: '450px',
+    margin: '0 auto',
+    width: '100%',
+    height: '600px',
+};
 const BlinksWrapper = () => {
     const [importedAction, setImportedAction] = useState('')
     const [generatedAction, setGeneratedAction] = useState('');
@@ -41,19 +47,61 @@ const BlinksWrapper = () => {
 
     function copyClip(text: string) {
         navigator.clipboard.writeText(text);
-        setNotify({ type: 'success', message: 'Text Copied to Clipboard' });
-        setTimeout(() => {
-            setNotify({
-                message: "",
-                type: ''
-            })
-        }, 2000)
+        handleMessage("success", "Text copied successfully")
     }
 
-    const generateActionUrl = () => {
+
+    const testAction = () => {
         if (importedAction == "") {
+            handleMessage("error", "Please Provide a Valid Action URL");
+            return;
+        }
+
+        if (importedAction.includes('dial.to')) {
+            //extract 
+            let actionurl = extractUrl(importedAction);
+            if (!actionurl) {
+                handleMessage("error", "This Action URL is invalid.");
+                return;
+            }
+            setGenerated(actionurl);
+            handleMessage("success", "Your action URL is valid, click generate to view canvas link");
+        } else {
+            setGenerated(importedAction);
+            handleMessage("success", "Your action URL is valid, click generate to view canvas link");
+
+        }
+
+        setImportedAction('')
+
+
+    }
+
+
+    function extractUrl(input: string) {
+        const regex = /solana-action:(https?:\/\/[^\s]+)/;
+        const match = input.match(regex);
+        return match ? match[1] : null;
+    }
+    const setGenerated = (action: string) => {
+        setGeneratedAction(`https://dscvr-blinks.vercel.app?action=${action}`);
+    }
+
+    const handleMessage = (type: string, message: string) => {
+        if (type === 'success') {
             setNotify({
-                message: 'Please enter a valid action url',
+                message: message,
+                type: 'success'
+            })
+            setTimeout(() => {
+                setNotify({
+                    message: '',
+                    type: ''
+                })
+            }, 2000)
+        } else {
+            setNotify({
+                message: message,
                 type: 'error'
             })
             setTimeout(() => {
@@ -64,31 +112,11 @@ const BlinksWrapper = () => {
             }, 2000)
             return;
         }
-
-        // //To Gzip
-        // const compressed = pako.gzip(importedAction);
-        // //To Base64
-        // const base64Encoded = Buffer.from(compressed).toString('base64');
-
-        setGeneratedAction(`https://dscvr-blinks.vercel.app?action=${importedAction}`);
-        setNotify({
-            message: 'Generated action URL successfully',
-            type: 'success'
-        })
-        setTimeout(() => {
-            setNotify({
-                message: '',
-                type: ''
-            })
-        }, 2000)
     }
 
-    const containerStyle = {
-        maxWidth: '450px',
-        margin: '0 auto',
-        width: '100%',
-        height: '600px',
-    };
+    const [howto, setShowHowTo] = useState(false)
+
+
     return (
         <div ref={containerRef} style={containerStyle} className='bg-[url("/grid_bg.png")] flex flex-col justify-center items-center'>
             {notify.type !== '' &&
@@ -96,20 +124,49 @@ const BlinksWrapper = () => {
                     <p className='text-center'>{notify.message}</p>
                 </div>
             }
+            <div className='absolute w-screen justify-end flex top-10 right-10'>
+                <button onClick={() => setShowHowTo(!howto)} className='bg-red-400  max-w-[200px] hover:bg-red-500/50 hover:text-white text-black p-1 text-[14px] shadow-lg rounded-xl'>
+                    How to use
+                </button>
+            </div>
+
+            {howto && <div className='bg-white h-screen px-5 w-screen py-20 flex flex-col justify-center items-center text-black top-0 absolute  '>
+
+                <p className='font-bold text-[35px] underline'>How To Use</p>
+                <p className='mb-4'>Using this canvas can be done in 6 easy steps!!!</p>
+
+                <ol className='space-y-4'>
+                    <li>1: Copy your blinks (GET) url,or you can also copy your dial.to url</li>
+                    <li>2: Paste the url into the input box</li>
+                    <li>3: Click on Generate</li>
+                    <li>4: Highlight and copy the generated link</li>
+                    <li>5: Create a Post and Paste Link</li>
+                    <li>6: Tadaaaaa Blink will unfurl</li>
+                </ol>
+
+                <button onClick={() => setShowHowTo(false)} className='bg-red-400 mt-5  w-[200px] hover:bg-red-500/50 hover:text-white text-white p-2 shadow-lg rounded-xl'>
+                    Close
+                </button>
+
+            </div>
+            }
             <div className='flex flex-col justify-center items-center space-y-6'>
 
                 <h1 className='sm:text-[16px] text-center text-[20px] md:text-[40px]'>Import your existing blinks with a click!</h1>
                 <input onChange={(event) => {
                     setImportedAction(event.target.value)
                 }} placeholder='paste your action get url' className='p-2 text-center border-white w-8/12  border rounded-xl  bg-black/10' />
-                <button onClick={() => generateActionUrl()} className='bg-white  max-w-[200px] hover:bg-white/50 hover:text-white text-black p-2 shadow-lg rounded-xl'>
-                    Generate
-                </button>
+                <div className='flex flex-row gap-x-2'>
+                    <button onClick={() => testAction()} className='bg-white  w-[100px] hover:bg-white/50 hover:text-white text-black p-2 shadow-lg rounded-xl'>
+                        Generate
+                    </button>
+                </div>
+
 
                 {generatedAction != '' && <div className='w-screen flex flex-row space-y-4 justify-center items-center'>
                     <div className='flex gap-x-4'>
-                        <a className='text-wrap' href={generatedAction}>{generatedAction.slice(0, 50)}...</a>
-                        <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' />
+                        <a className='text-wrap w-[300px] overflow-hidden' href={generatedAction}>{generatedAction}</a>
+                        {/* <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' /> */}
                     </div>
                 </div>
                 }

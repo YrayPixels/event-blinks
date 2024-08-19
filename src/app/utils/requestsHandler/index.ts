@@ -100,6 +100,29 @@ export const createEventTicket = async (
 }
 
 
+export const EventRegistration = async (
+    name: string,
+    email_address: string,
+    ticket_id: string,
+    event_id: string,
+    user_id: string,
+) => {
+    let bodyContent = new FormData();
+    bodyContent.append("name", name);
+    bodyContent.append("email_address", email_address);
+    bodyContent.append("ticket_id", ticket_id);
+    bodyContent.append("event_id", event_id);
+    bodyContent.append("user_id", user_id);
+
+
+    let response = await request.post({ url: '/purchase-ticket', data: bodyContent })
+    return response;
+}
+
+
+
+
+
 
 export const NETWORK = process.env.NEXT_PUBLIC_NETWORK == 'devnet' ? clusterApiUrl('devnet') : clusterApiUrl('mainnet-beta');
 

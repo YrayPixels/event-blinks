@@ -33,8 +33,14 @@ export const TransferUsdc = async (
 
     //get senders ata
 
+    let amountOrganizer = amount * 0.9
+    let amountApp = amount * 0.005
 
-    const amountInSmallestUnit = BigInt(amount * 1_000_000)
+    const amountInSmallestUnitOrg = BigInt(amountOrganizer * 1_000_000)
+    const amountInSmallestUnitApp = BigInt(amountApp * 1_000_000)
+
+
+
     // Get the sender's associated token account for USDC
     const senderTokenAccount = await getAssociatedTokenAddress(
         usdcMintAddress,
@@ -44,6 +50,13 @@ export const TransferUsdc = async (
     const recipientTokenAccount = await getAssociatedTokenAddress(
         usdcMintAddress,
         recipientPubkey,
+    )
+
+    let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
+
+    const AppTokenAccount = await getAssociatedTokenAddress(
+        usdcMintAddress,
+        new PublicKey(address),
     )
 
     const transaction = new Transaction()
@@ -56,17 +69,29 @@ export const TransferUsdc = async (
             )
         );
 
-    const transferInstruction = createTransferInstruction(
+
+
+    const transferInstructionOrg = createTransferInstruction(
         senderTokenAccount,
         recipientTokenAccount,
         senderAccount,
-        amountInSmallestUnit,
+        amountInSmallestUnitOrg,
         [],
         TOKEN_PROGRAM_ID
     );
 
+    const transferInstructionToProgram = createTransferInstruction(
+        senderTokenAccount,
+        AppTokenAccount,
+        senderAccount,
+        amountInSmallestUnitApp,
+        [],
+        TOKEN_PROGRAM_ID,
+    )
 
-    transaction.add(transferInstruction);
+
+    transaction.add(transferInstructionOrg);
+    transaction.add(transferInstructionToProgram);
 
     transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
     transaction.feePayer = senderAccount;

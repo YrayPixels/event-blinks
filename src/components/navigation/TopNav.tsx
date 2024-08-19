@@ -1,7 +1,4 @@
-import { NETWORK, createEvent, createEventTicket, fetchEvent } from '@/app/utils/requestsHandler'
-import { TransferUsdc, ValidateTransfer } from '@/app/utils/web3Utils'
 import { Close, Menu } from '@material-ui/icons'
-import { PublicKey } from '@solana/web3.js'
 import Image from 'next/image'
 import React, { useState } from 'react'
 
@@ -12,9 +9,9 @@ export const TopNav = () => {
     const startEvent = async () => {
 
 
-        let res = await ValidateTransfer(0.5, "SOL", "7onFqyJuCtSzSARS4C1gMpitvdSVyowpCuEdSgVvZH97", "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ")
+        //     let res = await ValidateTransfer(0.5, "SOL", "7onFqyJuCtSzSARS4C1gMpitvdSVyowpCuEdSgVvZH97", "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ")
 
-        console.log(res);
+        //     console.log(res);
 
     }
     return (

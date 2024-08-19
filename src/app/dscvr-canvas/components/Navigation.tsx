@@ -1,7 +1,4 @@
-import { NETWORK, createEvent, createEventTicket, fetchEvent } from '@/app/utils/requestsHandler'
-import { TransferUsdc } from '@/app/utils/web3Utils'
 import { Close, Menu } from '@material-ui/icons'
-import { PublicKey } from '@solana/web3.js'
 import Image from 'next/image'
 import React, { useState } from 'react'
 

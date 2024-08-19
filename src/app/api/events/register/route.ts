@@ -1,4 +1,4 @@
-import { NETWORK, fetchEvent, fetchTickets } from '@/app/utils/requestsHandler';
+import { EventRegistration, NETWORK, fetchEvent, fetchTickets } from '@/app/utils/requestsHandler';
 import { isImageUrl } from '@/app/utils/utils';
 import { TransferSol, TransferUsdc } from '@/app/utils/web3Utils';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
@@ -9,7 +9,7 @@ export const GET = async (req: Request) => {
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
     const eventId = params.get('event-id');
-    console.log(eventId);
+
     if (!eventId) {
         const error: ActionError = {
             message: `No Event Id Provided`,
@@ -34,8 +34,8 @@ export const GET = async (req: Request) => {
         let options = []
         for (let i = 0; i < ticketItem.length; i++) {
             let tickItem = {
-                label: ticketItem[i].ticket_name + ticketItem[i].price,
-                value: ticketItem[i].price,
+                label: ticketItem[i].ticket_name + "-" + ticketItem[i].price + "-" + item.payment_method,
+                value: ticketItem[i].unique_id,
             }
             options.push(tickItem)
         }
@@ -66,16 +66,7 @@ export const GET = async (req: Request) => {
                                 name: "ticket_id",
                                 label: 'Select Ticket Type', // text input placeholder
                                 type: "radio",
-                                options: [
-                                    {
-                                        label: "SOL",
-                                        value: "SOL",
-                                    },
-                                    {
-                                        label: "USDC",
-                                        value: "USDC",
-                                    },
-                                ]
+                                options: options
                             },
                         ]
                     },
@@ -117,9 +108,10 @@ export const POST = async (req: Request) => {
         const body: ActionPostRequest = await req.json();
         let res = await fetchEvent(eventId)
         let item = res.data;
+        let data: any = body?.data;
 
-
-        //Check if it is sol Payments of USDC
+        let payload: ActionPostResponse
+        // //Check if it is sol Payments of USDC
         if (item.payment_method == "USDC") {
 
             let response = await TransferUsdc(
@@ -128,7 +120,8 @@ export const POST = async (req: Request) => {
                 new PublicKey(item.payment_address),
                 Number(item.fee),
             )
-            var payload: ActionPostResponse = await createPostResponse({
+
+            payload = await createPostResponse({
                 fields: {
                     transaction: response,
                     message: "Event Created Successfully",
@@ -144,7 +137,7 @@ export const POST = async (req: Request) => {
                 Number(item.fee)
             )
 
-            var payload: ActionPostResponse = await createPostResponse({
+            payload = await createPostResponse({
                 fields: {
                     transaction: response,
                     message: "Event Created Successfully",
@@ -152,10 +145,11 @@ export const POST = async (req: Request) => {
             })
         }
 
-        //Register User For Transaction, but don't confirm the transaction yet. Transaction will be confirmed via CRON Task and that would be where the Tickets will be Minted for the user
+        //Register User For Transaction, but don't confirm the transaction yet. Transaction will be confirmed via CRON Task and that would be where the Tickets will be Minted for the user 
+        let eventRegistration = await EventRegistration(data?.name, data?.email_address, data?.ticket_id, eventId, body.account)
 
 
-        return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
+        return Response.json({}, { status: 200, headers: ACTIONS_CORS_HEADERS })
     } catch (e: any) {
         const error: ActionError = {
             message: `${e.response.message}`,

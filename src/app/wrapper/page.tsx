@@ -125,7 +125,7 @@ const BlinksWrapper = () => {
                 </div>
             }
             <div className='absolute w-screen justify-end flex top-10 right-10'>
-                <button onClick={() => setShowHowTo(!howto)} className='bg-red-400  max-w-[200px] hover:bg-red-500/50 hover:text-white text-black p-1 text-[14px] shadow-lg rounded-xl'>
+                <button onClick={() => setShowHowTo(!howto)} className='bg-red-400  max-w-[200px] hover:bg-red-500/50 hover:text-white text-white p-1 text-[14px] shadow-lg rounded-xl'>
                     How to use
                 </button>
             </div>

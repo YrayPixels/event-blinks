@@ -1,16 +1,15 @@
 import { NETWORK, fetchEvent, fetchTickets } from '@/app/utils/requestsHandler';
+import { isImageUrl } from '@/app/utils/utils';
 import { TransferSol, TransferUsdc } from '@/app/utils/web3Utils';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
-import { NextApiRequest } from 'next';
-import pako from 'pako';
 
 
 export const GET = async (req: Request) => {
     const url = new URL(req.url);
     const params = new URLSearchParams(url.search);
     const eventId = params.get('event-id');
-
+    console.log(eventId);
     if (!eventId) {
         const error: ActionError = {
             message: `No Event Id Provided`,
@@ -22,17 +21,27 @@ export const GET = async (req: Request) => {
         let res = await fetchEvent(eventId)
         let item = res.data;
 
+        let hostPlacer = `${process.env.NEXT_PUBLIC_HOST_URL}/eventhub.jpg`;
+        console.log(hostPlacer);
 
-        // let ticket = await fetchTickets(eventId);
-        // let ticketItem = ticket.data;
+        const image = await isImageUrl(item.flyer_uri);
+        const img_url = image ? item.flyer_uri : hostPlacer;
 
-        // let options = []
-        // for (let i = 0; i < ticketItem.length; i++) {
 
-        // }
+        let ticket = await fetchTickets(eventId);
+        let ticketItem = ticket.data;
+
+        let options = []
+        for (let i = 0; i < ticketItem.length; i++) {
+            let tickItem = {
+                label: ticketItem[i].ticket_name + ticketItem[i].price,
+                value: ticketItem[i].price,
+            }
+            options.push(tickItem)
+        }
 
         const payload = {
-            icon: item.flyer_uri,
+            icon: img_url,
             title: `Register for ${item.event_name} -- ${new Date(item.date).toUTCString()}`,
             description: `${item.description}`,
             links: {

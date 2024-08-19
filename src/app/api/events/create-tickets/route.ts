@@ -1,7 +1,8 @@
 import { NETWORK, createEventTicket, fetchEvent, fetchTickets } from '@/app/utils/requestsHandler';
+import { isImageUrl } from '@/app/utils/utils';
 import { TransferSol, TransferUsdc } from '@/app/utils/web3Utils';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
-import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
+import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionInstruction, clusterApiUrl } from '@solana/web3.js';
 
 
 export const GET = async (req: Request) => {
@@ -20,20 +21,27 @@ export const GET = async (req: Request) => {
         let res = await fetchEvent(eventId)
         let item = res.data;
 
+        let hostPlacer = `${process.env.NEXT_PUBLIC_HOST_URL}/eventhub.jpg`;
+
+
+        const image = await isImageUrl(item.flyer_uri);
+        const img_url = image ? item.flyer_uri : hostPlacer;
+
+
         let ticket = await fetchTickets(eventId);
         let ticketItem = ticket.data;
 
         let options = []
         for (let i = 0; i < ticketItem.length; i++) {
             let tickItem = {
-                label: ticketItem[i].ticket_name + ticketItem[i].price,
+                label: ticketItem[i].ticket_name + "--" + ticketItem[i].price + item.payment_method,
                 value: ticketItem[i].price,
             }
             options.push(tickItem)
         }
 
         const payload = {
-            icon: item.flyer_uri,
+            icon: img_url,
             title: `Create Ticket for ${item.event_name}`,
             description: `${item.description}`,
             links: {
@@ -44,7 +52,7 @@ export const GET = async (req: Request) => {
                         "parameters": [
                             {
                                 name: "ticket_id",
-                                label: 'Created Tickets', // text input placeholder
+                                label: 'Created Tickets (These are the tickets you have created) refresh to see more', // text input placeholder
                                 type: "radio",
                                 disabled: true,
                                 options: options,
@@ -134,18 +142,39 @@ export const POST = async (req: Request) => {
         let response = await createEventTicket(eventId, requestData?.name, requestData?.price, requestData?.image, requestData?.quantity)
 
         if (response) {
-            // TODO:: Mint the Nft Ticket Here
+            let tx = new Transaction()
 
-            //Mint the Nft Ticket here
+            // let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
+            // let walletAddress = new PublicKey(address);
+            // const lamportsToSend = Number(0.005) * LAMPORTS_PER_SOL;
 
-            //     var payload: ActionPostResponse = await createPostResponse({
-            //         fields: {
-            //             transaction: response,
-            //             message: "Event Created Successfully",
-            //         },
-            //     })
+            // tx.add(
+            //                 SystemProgram.transfer({
+            //                     fromPubkey: new PublicKey(body.account),
+            //                     toPubkey: walletAddress,
+            //                     lamports: lamportsToSend,
+            //                 }),
+            //             );
+            let message = "You are creating a new ticket for " + eventId
+            await tx.add(
+                new TransactionInstruction({
+                    keys: [{ pubkey: new PublicKey(body.account), isSigner: true, isWritable: true }],
+                    data: Buffer.from(message, "utf-8"),
+                    programId: new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
+                })
+            )
+            // const connection = new Connection(NETWORK);
+            // tx.feePayer = new PublicKey(body.account);
+            // tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
 
-            return Response.json({ message: "Ticket created successfully", ticket_id: response }, { status: 200, headers: ACTIONS_CORS_HEADERS })
+            const payload: ActionPostResponse = await createPostResponse({
+                fields: {
+                    transaction: tx,
+                    message: "Ticket created successfully"
+                },
+            })
+
+            return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
         } else {
             const error: ActionError = {
                 message: `Failed to create ticket`,

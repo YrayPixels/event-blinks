@@ -48,7 +48,8 @@ export const GET = async (req: Request) => {
                 actions: [
                     {
                         href: `/api/events/register?event-id=${eventId}`,
-                        label: `Register for Event ${Number(item.fee).toFixed(2)} ${item.payment_method}`,
+                        label: `Register for Event`,
+                        disabled: true,
                         "parameters": [
                             {
                                 "name": "name", // field name

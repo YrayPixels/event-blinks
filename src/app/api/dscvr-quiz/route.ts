@@ -7,6 +7,10 @@ export const GET = (req: Request) => {
     try {
         const url = new URL(req.url);
 
+        //work on timing here.
+
+        //last time + new time = main time
+
 
         const payload = {
             icon: `${process.env.NEXT_PUBLIC_HOST_URL}/dscvr.png`,
@@ -118,12 +122,23 @@ export const POST = async (req: Request) => {
         //     }
         //     return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
         // }
-        const payload: ActionPostResponse = await createPostResponse({
-            fields: {
-                transaction: transferTransaction,
-                message: "Event Created Successfully",
-            },
-        })
+
+        if (data.answer = "profiles-portals-content") {
+            var payload: ActionPostResponse = await createPostResponse({
+                fields: {
+                    transaction: transferTransaction,
+                    message: "Correct Answer",
+                },
+            })
+        } else {
+            var payload: ActionPostResponse = await createPostResponse({
+                fields: {
+                    transaction: transferTransaction,
+                    message: "Wrong Answer",
+                },
+            })
+        }
+
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })
     } catch (e: any) {

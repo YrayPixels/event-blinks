@@ -51,8 +51,7 @@ export const GET = (req: Request) => {
 
                     }
                 ],
-                next: '/events/create',
-
+                // next: '/events/create',
             }
         };
 
@@ -86,7 +85,7 @@ export const POST = async (req: Request) => {
                 toPubkey: walletAddress,
                 lamports: lamportsToSend,
             }),
-        );
+        ); 5
 
         const connection = new Connection(NETWORK);
         transferTransaction.feePayer = new PublicKey(body.account);
@@ -105,7 +104,7 @@ export const POST = async (req: Request) => {
             payload = await createPostResponse({
                 fields: {
                     transaction: transferTransaction,
-                    message: "Correct Answer",
+                    message: "InCorrect Answer Try Again!!",
                 },
             })
         }

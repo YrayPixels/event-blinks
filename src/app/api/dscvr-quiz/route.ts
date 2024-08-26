@@ -9,27 +9,36 @@ export const GET = (req: Request) => {
 
 
         const payload = {
-            icon: `${process.env.NEXT_PUBLIC_HOST_URL}/events.png`,
+            icon: `${process.env.NEXT_PUBLIC_HOST_URL}/dscvr.png`,
             title: "Daily DSCVR Quiz",
-            description: "",
+            description: `Question: What are the basic primitives that DSCVR is built around?`,
             links: {
                 actions: [
                     {
                         href: `/api/dscvr-quiz`,
-                        label: 'Create Event',
+                        label: 'Submit Answer',
                         "parameters": [
                             {
                                 name: "answer",
                                 label: 'Choose from the options below', // text input placeholder
                                 type: "radio",
                                 options: [
+
                                     {
-                                        label: "SOL",
-                                        value: "SOL",
+                                        value: "content-posts-rewards",
+                                        label: "Content - Posts - Rewards",
                                     },
                                     {
-                                        label: "USDC",
-                                        value: "USDC",
+                                        value: "profile-posts-rewards",
+                                        label: "Profile - Posts - Rewards",
+                                    },
+                                    {
+                                        value: "profiles-portals-content",
+                                        label: "Profiles - Portals - Content",
+                                    },
+                                    {
+                                        value: "contents-rewards",
+                                        label: "Contents - Rewards",
                                     },
                                 ]
                             },

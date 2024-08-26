@@ -1,6 +1,6 @@
 import { NETWORK, createEvent } from '@/app/utils/requestsHandler';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
-import { createTransferInstruction, getAssociatedTokenAddress } from '@solana/spl-token';
+import { createTransferInstruction, getAssociatedTokenAddress, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { constant } from 'lodash';
 
@@ -90,20 +90,23 @@ export const POST = async (req: Request) => {
 
             let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
             let walletAddress = new PublicKey(address);
-            const lamportsToSend = Number(0.00001) * LAMPORTS_PER_SOL;
-            const transferTransaction = new Transaction().add(
-                SystemProgram.transfer({
-                    fromPubkey: new PublicKey(body.account),
-                    toPubkey: walletAddress,
-                    lamports: lamportsToSend,
-                }),
-            );
+            // const lamportsToSend = Number(0.00001) * LAMPORTS_PER_SOL;
+            const transferTransaction = new Transaction()
+            // .add(
+            //     SystemProgram.transfer({
+            //         fromPubkey: new PublicKey(body.account),
+            //         toPubkey: walletAddress,
+            //         lamports: lamportsToSend,
+            //     }),
+            // );
 
             let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
 
             const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
+
+            getOrCreateAssociatedTokenAccount
             const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
-            let amount = 1000 * Math.pow(10, 5)
+            let amount = 1000;
             const transferInstruction = createTransferInstruction(
                 senderTokenAddress,
                 receiverTokenAddress,

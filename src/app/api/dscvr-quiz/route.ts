@@ -1,3 +1,4 @@
+import { checkIfAnswered, fetchQuiz, submitAnswer } from '@/app/utils/quizHandler';
 import { NETWORK, createEvent } from '@/app/utils/requestsHandler';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { createTransferInstruction, getAssociatedTokenAddress, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
@@ -5,14 +6,19 @@ import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, cl
 import { constant } from 'lodash';
 
 
-export const GET = (req: Request) => {
+export const GET = async (req: Request) => {
     try {
         const url = new URL(req.url);
 
 
-
         //work on timing here.
-
+        try {        // fetch Question
+            let res = await fetchQuiz();
+            let quiz = res.data;
+            console.log(quiz)
+        } catch (e) {
+            console.log(e);
+        }
         //last time + new time = main time
 
         const payload = {
@@ -78,15 +84,34 @@ export const OPTIONS = GET;
 export const POST = async (req: Request) => {
     try {
 
-        const body: ActionPostRequest = await req.json();
+        const url = new URL(req.url);
+        const params = new URLSearchParams(url.search);
+        const questionId = params.get('question');
 
+        if (!questionId) {
+            const error: ActionError = {
+                message: "Invalid Question ID",
+            }
+            return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
+        }
+        const body: ActionPostRequest = await req.json();
         let data: any = body?.data;
 
-
+        //Check if the user has answered.
+        let check = await checkIfAnswered(body.account, questionId)
+        if (!check) {
+            const error: ActionError = {
+                message: "You have already answered this question, Kindly Wait for Tomorrow's Questions!",
+            }
+            return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
+        }
 
         let payload: ActionPostResponse;
 
         if (data.answer === 'profiles-portals-content') {
+
+            let submitted = await submitAnswer(questionId, data.answer, body.account)
+
 
             let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
             let walletAddress = new PublicKey(address);
@@ -126,7 +151,6 @@ export const POST = async (req: Request) => {
                 },
             })
         } else {
-
             const error: ActionError = {
                 message: "InCorrect Answer Try Again!!",
             }

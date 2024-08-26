@@ -1,3 +1,4 @@
+import { fetchQuiz } from '@/app/utils/quizHandler'
 import { NETWORK, createEvent, createEventTicket, fetchEvent } from '@/app/utils/requestsHandler'
 import { TransferUsdc, ValidateTransfer } from '@/app/utils/web3Utils'
 import { Close, Menu } from '@material-ui/icons'
@@ -12,9 +13,14 @@ export const TopNav = () => {
     const startEvent = async () => {
 
 
-        let res = await ValidateTransfer(0.5, "SOL", "7onFqyJuCtSzSARS4C1gMpitvdSVyowpCuEdSgVvZH97", "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ")
-
-        console.log(res);
+        try {        // fetch Question
+            let res = await fetchQuiz();
+            let quiz = res.data;
+            console.log(quiz)
+        } catch (e) {
+            console.log(e);
+        }
+        //last time
 
     }
     return (

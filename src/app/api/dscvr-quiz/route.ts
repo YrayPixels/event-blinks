@@ -1,5 +1,6 @@
 import { NETWORK, createEvent } from '@/app/utils/requestsHandler';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
+import { createTransferInstruction, getAssociatedTokenAddress } from '@solana/spl-token';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { constant } from 'lodash';
 
@@ -8,10 +9,11 @@ export const GET = (req: Request) => {
     try {
         const url = new URL(req.url);
 
+
+
         //work on timing here.
 
         //last time + new time = main time
-
 
         const payload = {
             icon: `${process.env.NEXT_PUBLIC_HOST_URL}/dscvr.png`,
@@ -23,11 +25,11 @@ export const GET = (req: Request) => {
                         href: `/api/dscvr-quiz`,
                         label: 'Submit Answer',
                         parameters: [
-                            // {
-                            //     name: "flyer_url",
-                            //     label: 'enter the link to the flyer for your event - leave empty if none', // text input placeholder
-                            //     type: "url",
-                            // },
+                            {
+                                name: "name",
+                                label: 'please enter your name: pseudo names are allowed', // text input placeholder
+                                type: "text",
+                            },
                             {
                                 name: "answer",
                                 label: 'Choose from the options below', // text input placeholder
@@ -81,37 +83,57 @@ export const POST = async (req: Request) => {
         let data: any = body?.data;
 
 
-        let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
-        let walletAddress = new PublicKey(address);
-        const lamportsToSend = Number(0.00001) * LAMPORTS_PER_SOL;
-        const transferTransaction = new Transaction().add(
-            SystemProgram.transfer({
-                fromPubkey: new PublicKey(body.account),
-                toPubkey: walletAddress,
-                lamports: lamportsToSend,
-            }),
-        ); 5
-
-        const connection = new Connection(NETWORK);
-        transferTransaction.feePayer = new PublicKey(body.account);
-        transferTransaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
         let payload: ActionPostResponse;
 
         if (data.answer === 'profiles-portals-content') {
+
+            let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
+            let walletAddress = new PublicKey(address);
+            const lamportsToSend = Number(0.00001) * LAMPORTS_PER_SOL;
+            const transferTransaction = new Transaction().add(
+                SystemProgram.transfer({
+                    fromPubkey: new PublicKey(body.account),
+                    toPubkey: walletAddress,
+                    lamports: lamportsToSend,
+                }),
+            );
+
+            let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
+
+            const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
+            const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
+            let amount = 1000 * Math.pow(10, 5)
+            const transferInstruction = createTransferInstruction(
+                senderTokenAddress,
+                receiverTokenAddress,
+                walletAddress,
+                amount,
+            );
+
+            transferTransaction.add(transferInstruction);
+
+            const connection = new Connection(NETWORK);
+            transferTransaction.feePayer = new PublicKey(body.account);
+            transferTransaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
             payload = await createPostResponse({
                 fields: {
                     transaction: transferTransaction,
-                    message: "Correct Answer",
+                    message: "Correct Answer Horray!!",
                 },
             })
         } else {
-            payload = await createPostResponse({
-                fields: {
-                    transaction: transferTransaction,
-                    message: "InCorrect Answer Try Again!!",
-                },
-            })
+
+            const error: ActionError = {
+                message: "InCorrect Answer Try Again!!",
+            }
+            return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
+            // payload = await createPostResponse({
+            //     fields: {
+            //         transaction: transferTransaction,
+            //         message: "InCorrect Answer Try Again!!",
+            //     },
+            // })
         }
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })

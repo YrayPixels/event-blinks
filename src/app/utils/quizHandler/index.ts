@@ -5,6 +5,11 @@ export const fetchQuiz = async () => {
     return response;
 }
 
+export const fetchSingleQuestion = async (question_id: string) => {
+    let response = await request.get(`/fetch-one-question/${question_id}`)
+    return response;
+}
+
 export const checkIfAnswered = async (user_id: string, question_id: string) => {
     let response = await request.get(`/check-if-answer/${user_id}/${question_id}`)
     return response;

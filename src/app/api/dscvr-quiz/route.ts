@@ -1,9 +1,9 @@
-import { checkIfAnswered, fetchQuiz, submitAnswer } from '@/app/utils/quizHandler';
+import { checkIfAnswered, fetchQuiz, fetchSingleQuestion, submitAnswer } from '@/app/utils/quizHandler';
 import { NETWORK, createEvent } from '@/app/utils/requestsHandler';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { createTransferInstruction, getAssociatedTokenAddress, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
-import { constant } from 'lodash';
+import { constant, forEach } from 'lodash';
 
 
 export const GET = async (req: Request) => {
@@ -12,23 +12,29 @@ export const GET = async (req: Request) => {
 
 
         //work on timing here.
-        try {        // fetch Question
-            let res = await fetchQuiz();
-            let quiz = res.data;
-            console.log(quiz)
-        } catch (e) {
-            console.log(e);
-        }
+        // fetch Question
+        let res = await fetchQuiz();
+        let quiz = res.data;
+
+        let options: any = []
+        JSON.parse(quiz.options).forEach((option: any) => {
+            options.push({
+                value: option,
+                label: option,
+            })
+        })
+
+        console.log(options);
         //last time + new time = main time
 
         const payload = {
             icon: `${process.env.NEXT_PUBLIC_HOST_URL}/dscvr.png`,
             title: "Daily DSCVR Quiz",
-            description: `Question: What are the basic primitives that DSCVR is built around?`,
+            description: `Question: ${quiz.question}`,
             links: {
                 actions: [
                     {
-                        href: `/api/dscvr-quiz`,
+                        href: `/api/dscvr-quiz?question=${quiz.id}`,
                         label: 'Submit Answer',
                         parameters: [
                             {
@@ -40,25 +46,7 @@ export const GET = async (req: Request) => {
                                 name: "answer",
                                 label: 'Choose from the options below', // text input placeholder
                                 type: "radio",
-                                options: [
-
-                                    {
-                                        value: "content-posts-rewards",
-                                        label: "Content - Posts - Rewards",
-                                    },
-                                    {
-                                        value: "profile-posts-rewards",
-                                        label: "Profile - Posts - Rewards",
-                                    },
-                                    {
-                                        value: "profiles-portals-content",
-                                        label: "Profiles - Portals - Content",
-                                    },
-                                    {
-                                        value: "contents-rewards",
-                                        label: "Contents - Rewards",
-                                    },
-                                ]
+                                options: options
                             },
                         ],
 
@@ -94,12 +82,16 @@ export const POST = async (req: Request) => {
             }
             return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
         }
+        //fetch question
+        let res = await fetchSingleQuestion(questionId);
+        let quiz = res.data;
+
         const body: ActionPostRequest = await req.json();
         let data: any = body?.data;
 
         //Check if the user has answered.
         let check = await checkIfAnswered(body.account, questionId)
-        if (!check) {
+        if (check.data.status) {
             const error: ActionError = {
                 message: "You have already answered this question, Kindly Wait for Tomorrow's Questions!",
             }
@@ -108,7 +100,7 @@ export const POST = async (req: Request) => {
 
         let payload: ActionPostResponse;
 
-        if (data.answer === 'profiles-portals-content') {
+        if (data.answer === quiz.answer) {
 
             let submitted = await submitAnswer(questionId, data.answer, body.account)
 

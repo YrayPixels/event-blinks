@@ -120,8 +120,6 @@ export const POST = async (req: Request) => {
             let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
 
             const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
-
-            getOrCreateAssociatedTokenAccount
             const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
             let amount = 1000;
             const transferInstruction = createTransferInstruction(

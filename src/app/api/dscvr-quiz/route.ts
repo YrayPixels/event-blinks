@@ -107,18 +107,11 @@ export const POST = async (req: Request) => {
         }
 
         let payload: ActionPostResponse;
-
-        const privateKey = process.env.PRIVATE_KEY?.split(',').map(fig => Number(fig)) as unknown as Uint8Array;
-        let secretKeyArray = new Uint8Array(privateKey);
-        const keypair = Keypair.fromSecretKey(secretKeyArray);
         if (data.answer === quiz.answer) {
 
-            // let submitted = await submitAnswer(questionId, data.answer, body.account)
+            let submitted = await submitAnswer(questionId, data.answer, body.account)
             const connection = new Connection(NETWORK);
 
-            let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
-            let walletAddress = new PublicKey(address);
-            ;
             const transferTransaction = new Transaction();
             // Memo program ID (fixed for the memo program)
             const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
@@ -144,12 +137,6 @@ export const POST = async (req: Request) => {
                 message: "InCorrect Answer Try Again!!",
             }
             return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
-            // payload = await createPostResponse({
-            //     fields: {
-            //         transaction: transferTransaction,
-            //         message: "InCorrect Answer Try Again!!",
-            //     },
-            // })
         }
 
         return Response.json(payload, { status: 200, headers: ACTIONS_CORS_HEADERS })

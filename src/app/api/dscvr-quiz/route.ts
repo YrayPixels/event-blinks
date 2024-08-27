@@ -2,8 +2,8 @@ import { checkIfAnswered, fetchQuiz, fetchSingleQuestion, submitAnswer } from '@
 import { NETWORK, createEvent } from '@/app/utils/requestsHandler';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { createTransferInstruction, getAssociatedTokenAddress, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
-import { constant, forEach } from 'lodash';
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionInstruction, clusterApiUrl } from '@solana/web3.js';
+
 
 
 export const GET = async (req: Request) => {
@@ -113,34 +113,23 @@ export const POST = async (req: Request) => {
         const keypair = Keypair.fromSecretKey(secretKeyArray);
         if (data.answer === quiz.answer) {
 
-            let submitted = await submitAnswer(questionId, data.answer, body.account)
+            // let submitted = await submitAnswer(questionId, data.answer, body.account)
             const connection = new Connection(NETWORK);
 
             let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
             let walletAddress = new PublicKey(address);
-            const lamportsToSend = Number(0.00001) * LAMPORTS_PER_SOL;
-            const transferTransaction = new Transaction().add(
-                SystemProgram.transfer({
-                    toPubkey: walletAddress,
-                    fromPubkey: new PublicKey(body.account),
-                    lamports: lamportsToSend,
-                }),
-            );
+            ;
+            const transferTransaction = new Transaction();
+            // Memo program ID (fixed for the memo program)
+            const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
+            const memoInstruction = new TransactionInstruction({
+                keys: [],
+                programId: MEMO_PROGRAM_ID,
+                data: Buffer.from("Congrats For Getting The Answer")
+            });
 
-            let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
 
-            const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
-            // const receiverTokenAddress = (await getOrCreateAssociatedTokenAccount(connection, keypair, bonkMint, new PublicKey(body.account))).address
-            const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
-            let amount = 1000;
-            const transferInstruction = createTransferInstruction(
-                senderTokenAddress,
-                receiverTokenAddress,
-                walletAddress,
-                amount,
-            );
-
-            transferTransaction.add(transferInstruction);
+            transferTransaction.add(memoInstruction);
 
             transferTransaction.feePayer = new PublicKey(body.account);
             transferTransaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;

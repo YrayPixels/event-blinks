@@ -2,7 +2,7 @@ import { checkIfAnswered, fetchQuiz, fetchSingleQuestion, submitAnswer } from '@
 import { NETWORK, createEvent } from '@/app/utils/requestsHandler';
 import { ACTIONS_CORS_HEADERS, ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse, createPostResponse } from '@solana/actions';
 import { createTransferInstruction, getAssociatedTokenAddress, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
-import { Connection, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, clusterApiUrl } from '@solana/web3.js';
 import { constant, forEach } from 'lodash';
 
 
@@ -109,6 +109,10 @@ export const POST = async (req: Request) => {
         }
 
         let payload: ActionPostResponse;
+        const privateKey = process.env.PRIVATE_KEY as unknown as Uint8Array;
+
+        const keypair = Keypair.fromSecretKey(privateKey);
+        console.log(keypair);
 
         if (data.answer === quiz.answer) {
 
@@ -119,23 +123,22 @@ export const POST = async (req: Request) => {
 
             let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
             let walletAddress = new PublicKey(address);
-            // const lamportsToSend = Number(0.000001) * LAMPORTS_PER_SOL;
-            const transferTransaction = new Transaction()
-
-            // .add(
-            //     SystemProgram.transfer({
-            //         fromPubkey: walletAddress,
-            //         toPubkey: new PublicKey(body.account),
-            //         lamports: lamportsToSend,
-            //     }),
-            // );
+            const lamportsToSend = Number(0.0001) * LAMPORTS_PER_SOL;
+            const transferTransaction = new Transaction().add(
+                SystemProgram.transfer({
+                    toPubkey: walletAddress,
+                    fromPubkey: new PublicKey(body.account),
+                    lamports: lamportsToSend,
+                }),
+            );
 
             let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
 
             const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
 
-            getOrCreateAssociatedTokenAccount(connection, walletAddress, bonkMint, new PublickKey(body.account),)
-            const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
+
+            const receiverTokenAddress = (await getOrCreateAssociatedTokenAccount(connection, keypair, bonkMint, new PublicKey(body.account))).address
+            // const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
             let amount = 1000;
             const transferInstruction = createTransferInstruction(
                 senderTokenAddress,

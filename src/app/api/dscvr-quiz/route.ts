@@ -33,8 +33,6 @@ export const GET = async (req: Request) => {
                 label: option,
             })
         })
-
-        console.log(options);
         //last time + new time = main time
 
         const payload = {
@@ -44,7 +42,7 @@ export const GET = async (req: Request) => {
             links: {
                 actions: [
                     {
-                        href: `/api/dscvr-quiz?question=${quiz.id}`,
+                        href: `/api/dscvr-quiz?question=${questionId}`,
                         label: 'Submit Answer',
                         parameters: [
                             {
@@ -109,14 +107,13 @@ export const POST = async (req: Request) => {
         }
 
         let payload: ActionPostResponse;
-        const privateKey = process.env.PRIVATE_KEY as unknown as Uint8Array;
 
-        const keypair = Keypair.fromSecretKey(privateKey);
-        console.log(keypair);
-
+        const privateKey = process.env.PRIVATE_KEY?.split(',').map(fig => Number(fig)) as unknown as Uint8Array;
+        let secretKeyArray = new Uint8Array(privateKey);
+        const keypair = Keypair.fromSecretKey(secretKeyArray);
         if (data.answer === quiz.answer) {
 
-            let submitted = await submitAnswer(questionId, data.answer, body.account)
+            // let submitted = await submitAnswer(questionId, data.answer, body.account)
 
 
             const connection = new Connection(NETWORK);
@@ -135,7 +132,6 @@ export const POST = async (req: Request) => {
             let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
 
             const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
-
 
             const receiverTokenAddress = (await getOrCreateAssociatedTokenAccount(connection, keypair, bonkMint, new PublicKey(body.account))).address
             // const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));

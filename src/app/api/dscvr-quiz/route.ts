@@ -10,10 +10,20 @@ export const GET = async (req: Request) => {
     try {
         const url = new URL(req.url);
 
+        const params = new URLSearchParams(url.search);
+        const questionId = params.get('question');
+
+        if (!questionId) {
+            const error: ActionError = {
+                message: "Invalid Question ID",
+            }
+            return Response.json(error, { status: 400, headers: ACTIONS_CORS_HEADERS })
+        }
 
         //work on timing here.
         // fetch Question
-        let res = await fetchQuiz();
+        // let res = await fetchQuiz();
+        let res = await fetchSingleQuestion(questionId);
         let quiz = res.data;
 
         let options: any = []
@@ -30,7 +40,7 @@ export const GET = async (req: Request) => {
         const payload = {
             icon: `${process.env.NEXT_PUBLIC_HOST_URL}/dscvr.png`,
             title: "Daily DSCVR Quiz",
-            description: `Question: ${quiz.question}`,
+            description: `\n Question ${questionId}: ${quiz.question}`,
             links: {
                 actions: [
                     {
@@ -105,32 +115,37 @@ export const POST = async (req: Request) => {
             let submitted = await submitAnswer(questionId, data.answer, body.account)
 
 
+            const connection = new Connection(NETWORK);
+
             let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
             let walletAddress = new PublicKey(address);
-            const lamportsToSend = Number(0.000001) * LAMPORTS_PER_SOL;
-            const transferTransaction = new Transaction().add(
-                SystemProgram.transfer({
-                    fromPubkey: walletAddress,
-                    toPubkey: new PublicKey(body.account),
-                    lamports: lamportsToSend,
-                }),
-            );
+            // const lamportsToSend = Number(0.000001) * LAMPORTS_PER_SOL;
+            const transferTransaction = new Transaction()
 
-            // let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
-
-            // const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
-            // const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
-            // let amount = 1000;
-            // const transferInstruction = createTransferInstruction(
-            //     senderTokenAddress,
-            //     receiverTokenAddress,
-            //     walletAddress,
-            //     amount,
+            // .add(
+            //     SystemProgram.transfer({
+            //         fromPubkey: walletAddress,
+            //         toPubkey: new PublicKey(body.account),
+            //         lamports: lamportsToSend,
+            //     }),
             // );
 
-            // transferTransaction.add(transferInstruction);
+            let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
 
-            const connection = new Connection(NETWORK);
+            const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
+
+            getOrCreateAssociatedTokenAccount(connection, walletAddress, bonkMint, new PublickKey(body.account),)
+            const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
+            let amount = 1000;
+            const transferInstruction = createTransferInstruction(
+                senderTokenAddress,
+                receiverTokenAddress,
+                walletAddress,
+                amount,
+            );
+
+            transferTransaction.add(transferInstruction);
+
             transferTransaction.feePayer = new PublicKey(body.account);
             transferTransaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
             payload = await createPostResponse({

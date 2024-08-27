@@ -113,12 +113,12 @@ export const POST = async (req: Request) => {
         const keypair = Keypair.fromSecretKey(secretKeyArray);
         if (data.answer === quiz.answer) {
 
-            // let submitted = await submitAnswer(questionId, data.answer, body.account)
+            let submitted = await submitAnswer(questionId, data.answer, body.account)
             const connection = new Connection(NETWORK);
 
             let address = process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ";
             let walletAddress = new PublicKey(address);
-            const lamportsToSend = Number(0.0001) * LAMPORTS_PER_SOL;
+            const lamportsToSend = Number(0.00001) * LAMPORTS_PER_SOL;
             const transferTransaction = new Transaction().add(
                 SystemProgram.transfer({
                     toPubkey: walletAddress,
@@ -129,20 +129,18 @@ export const POST = async (req: Request) => {
 
             let bonkMint = new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263');
 
-            // const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
+            const senderTokenAddress = await getAssociatedTokenAddress(bonkMint, walletAddress);
+            // const receiverTokenAddress = (await getOrCreateAssociatedTokenAccount(connection, keypair, bonkMint, new PublicKey(body.account))).address
+            const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
+            let amount = 1000;
+            const transferInstruction = createTransferInstruction(
+                senderTokenAddress,
+                receiverTokenAddress,
+                walletAddress,
+                amount,
+            );
 
-            const receiverTokenAddress = (await getOrCreateAssociatedTokenAccount(connection, keypair, bonkMint, new PublicKey(body.account))).address
-            console.log(receiverTokenAddress)
-            // const receiverTokenAddress = await getAssociatedTokenAddress(bonkMint, new PublicKey(body.account));
-            // let amount = 1000;
-            // const transferInstruction = createTransferInstruction(
-            //     senderTokenAddress,
-            //     receiverTokenAddress,
-            //     walletAddress,
-            //     amount,
-            // );
-
-            // transferTransaction.add(transferInstruction);
+            transferTransaction.add(transferInstruction);
 
             transferTransaction.feePayer = new PublicKey(body.account);
             transferTransaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;

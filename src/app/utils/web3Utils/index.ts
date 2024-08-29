@@ -183,17 +183,21 @@ export const ValidateTransfer = async (
         }
 
         // Get recent transaction signatures
-        const confirmedSignatureInfos = await connection.getConfirmedSignaturesForAddress2(toAddress, { limit: 10 });
+        // const confirmedSignatureInfos = await connection.getConfirmedSignaturesForAddress2(toAddress, { limit: 10 });
+        const confirmedSignatureInfos = await connection.getSignaturesForAddress(toAddress, { limit: 10 });
+
 
         // Iterate through the signatures and find the matching transaction
         let transactionFound = false;
         for (let sigInfo of confirmedSignatureInfos) {
-            const transaction = await connection.getParsedConfirmedTransaction(sigInfo.signature);
+            // const transaction = await connection.getParsedConfirmedTransaction(sigInfo.signature);
+            const transaction = await connection.getParsedTransaction(sigInfo.signature);
+
             if (transaction) {
                 const instructions = transaction.transaction.message.instructions;
-
                 for (let instruction of instructions) {
                     if ('parsed' in instruction) {
+
                         if (paymentMethod === 'SOL') {
                             if (instruction.programId.equals(SystemProgram.programId) &&
                                 instruction.parsed.info.destination == toAddress &&

@@ -191,7 +191,9 @@ export const ValidateTransfer = async (
         let transactionFound = false;
         for (let sigInfo of confirmedSignatureInfos) {
             // const transaction = await connection.getParsedConfirmedTransaction(sigInfo.signature);
-            const transaction = await connection.getParsedTransaction(sigInfo.signature);
+            const transaction = await connection.getParsedTransaction(sigInfo.signature, {
+                'maxSupportedTransactionVersion': 0
+            });
             if (transaction) {
                 const instructions = transaction.transaction.message.instructions;
                 for (let instruction of instructions) {

@@ -45,6 +45,8 @@ export default function BackOffice() {
                                 <TableCell>Event Name</TableCell>
                                 <TableCell align="right">Description</TableCell>
                                 <TableCell align="right">Email Address</TableCell>
+                                <TableCell align="right">Owner</TableCell>
+
                                 <TableCell align="right">Location</TableCell>
                                 <TableCell align="right">Created Date</TableCell>
                                 <TableCell align="right">Action</TableCell>
@@ -68,6 +70,8 @@ export default function BackOffice() {
                                         </TableCell>
                                         <TableCell align="right">{event.description}</TableCell>
                                         <TableCell align="right">{event.email_address}</TableCell>
+                                        <TableCell align="right">{event.owner.slice(0, 7) + "..."}</TableCell>
+
                                         <TableCell align="right">{event.location}</TableCell>
                                         <TableCell align="right">{new Date(event.created_at).toLocaleDateString()}</TableCell>
                                         <TableCell align="right">

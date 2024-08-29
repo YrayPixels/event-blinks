@@ -16,6 +16,7 @@ export default function BackOffice() {
     }, [])
 
     const VerifyTx = async (event: any) => {
+        console.log(event);
         setLoader(true)
         let res = await ValidateTransfer(Number(process.env.NEXT_PUBLIC_CREATE_FEE), "SOL", event.owner, process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ")
         if (res?.status && res?.transactionHash) {
@@ -39,6 +40,8 @@ export default function BackOffice() {
                         <TableHead>
                             <TableRow>
                                 <TableCell>S/N</TableCell>
+                                <TableCell>UniqueId</TableCell>
+
                                 <TableCell>Event Name</TableCell>
                                 <TableCell align="right">Description</TableCell>
                                 <TableCell align="right">Email Address</TableCell>
@@ -58,15 +61,18 @@ export default function BackOffice() {
                                             {index + 1}
                                         </TableCell>
                                         <TableCell component="th" scope="row">
+                                            {event.unique_id.slice(0, 4) + "..."}
+                                        </TableCell>
+                                        <TableCell component="th" scope="row">
                                             {event.event_name}
                                         </TableCell>
                                         <TableCell align="right">{event.description}</TableCell>
                                         <TableCell align="right">{event.email_address}</TableCell>
                                         <TableCell align="right">{event.location}</TableCell>
-                                        <TableCell align="right">{event.created_at}</TableCell>
+                                        <TableCell align="right">{new Date(event.created_at).toLocaleDateString()}</TableCell>
                                         <TableCell align="right">
                                             {loading ? <CircularProgress /> :
-                                                <Button onClick={() => VerifyTx(event)}>Verify</Button>
+                                                <Button className='border' onClick={() => VerifyTx(event)}>Verify</Button>
                                             }
                                         </TableCell>
                                     </TableRow>

@@ -21,13 +21,14 @@ export default function BackOffice() {
         let res = await ValidateTransfer(Number(process.env.NEXT_PUBLIC_CREATE_FEE), "SOL", event.owner, process.env.WALLET_ADDRESS || "13dqNw1su2UTYPVvqP6ahV8oHtghvoe2k2czkrx9uWJZ")
         if (res?.status && res?.transactionHash) {
             //Update the transaction status as paid and send mail
-            setLoader(false);
-            // let updateTransaction = await updateEventTransaction(event.unique_id, res?.transactionHash)
-            // if (updateTransaction) {
-            //     alert(`Transaction Paid Successfully`)
-            // } else {
-            //     alert('Transaction Failed')
-            // }
+            let updateTransaction = await updateEventTransaction(event.unique_id, res?.transactionHash)
+            if (updateTransaction) {
+                setLoader(false);
+
+                alert(`Transaction Paid Successfully`)
+            } else {
+                alert('Transaction Failed')
+            }
         }
 
     }

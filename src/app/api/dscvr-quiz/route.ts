@@ -110,7 +110,7 @@ export const POST = async (req: Request) => {
         if (data.answer === quiz.answer) {
 
             let submitted = await submitAnswer(questionId, data.answer, body.account)
-            const connection = new Connection(NETWORK);
+            const connection = new Connection(NETWORK, 'confirmed');
 
             const transferTransaction = new Transaction();
             // Memo program ID (fixed for the memo program)

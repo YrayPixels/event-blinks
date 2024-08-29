@@ -101,6 +101,7 @@ export const createEventTicket = async (
 
 
 
+
 // export const NETWORK = process.env.NEXT_PUBLIC_NETWORK == 'devnet' ? clusterApiUrl('devnet') : clusterApiUrl('mainnet-beta');
 
 

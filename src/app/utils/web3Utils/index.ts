@@ -192,10 +192,10 @@ export const ValidateTransfer = async (
         for (let sigInfo of confirmedSignatureInfos) {
             // const transaction = await connection.getParsedConfirmedTransaction(sigInfo.signature);
             const transaction = await connection.getParsedTransaction(sigInfo.signature);
-
             if (transaction) {
                 const instructions = transaction.transaction.message.instructions;
                 for (let instruction of instructions) {
+
                     if ('parsed' in instruction) {
 
                         if (paymentMethod === 'SOL') {

@@ -101,8 +101,8 @@ export const createEventTicket = async (
 
 
 
-export const NETWORK = process.env.NEXT_PUBLIC_NETWORK == 'devnet' ? clusterApiUrl('devnet') : clusterApiUrl('mainnet-beta');
+// export const NETWORK = process.env.NEXT_PUBLIC_NETWORK == 'devnet' ? clusterApiUrl('devnet') : clusterApiUrl('mainnet-beta');
 
 
 
-// export const NETWORK = process.env.NEXT_PUBLIC_NETWORK == 'devnet' ? clusterApiUrl('devnet') : "https://mainnet.helius-rpc.com/?api-key=61c2ee69-b100-45d8-81e2-488dc6c4a5f0";
+export const NETWORK = process.env.NEXT_PUBLIC_NETWORK == 'devnet' ? `https://devnet.helius-rpc.com/?api-key=${process.env.HELIUS}` : `https://mainnet.helius-rpc.com/?api-key=${process.env.HELIUS}`;

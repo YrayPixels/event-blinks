@@ -171,7 +171,7 @@ const BlinksWrapper = () => {
                 {generatedAction != '' && <div className='w-screen flex flex-row space-y-4 justify-center items-center'>
                     <div className='flex gap-x-4'>
                         <a className='text-wrap w-[300px] overflow-hidden' href={generatedAction}>{generatedAction}</a>
-                        <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' />
+                        {/* <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' /> */}
                     </div>
                 </div>
                 }

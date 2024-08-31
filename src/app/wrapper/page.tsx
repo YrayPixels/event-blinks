@@ -15,7 +15,7 @@ const BlinksWrapper = () => {
     const [importedAction, setImportedAction] = useState('')
     const [generatedAction, setGeneratedAction] = useState('');
     const canvasClientRef = useRef<CanvasClient | undefined>();
-    const [_, setIsInIframe] = useState(false);
+    const [isSetFrame, setIsInIframe] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const [notify, setNotify] = useState({
         message: '',
@@ -46,7 +46,11 @@ const BlinksWrapper = () => {
 
 
     function copyClip(text: string) {
-        navigator.clipboard.writeText(text);
+        if (isSetFrame) {
+            canvasClientRef?.current?.copyToClipboard(text);
+        } else {
+            navigator.clipboard.writeText(text);
+        }
         handleMessage("success", "Text copied successfully")
     }
 
@@ -166,7 +170,7 @@ const BlinksWrapper = () => {
                 {generatedAction != '' && <div className='w-screen flex flex-row space-y-4 justify-center items-center'>
                     <div className='flex gap-x-4'>
                         <a className='text-wrap w-[300px] overflow-hidden' href={generatedAction}>{generatedAction}</a>
-                        {/* <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' /> */}
+                        <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' />
                     </div>
                 </div>
                 }

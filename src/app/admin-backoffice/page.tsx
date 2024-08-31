@@ -27,6 +27,8 @@ export default function BackOffice() {
 
                 alert(`Transaction Paid Successfully`)
             } else {
+                setLoader(false);
+
                 alert('Transaction Failed')
             }
         }

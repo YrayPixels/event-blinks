@@ -70,10 +70,10 @@ const BlinksWrapper = () => {
                 return;
             }
             setGenerated(actionurl);
-            handleMessage("success", "Your action URL is valid, click generate to view canvas link");
+            handleMessage("success", "Your action URL is valid, Copy Generated canvas link");
         } else {
             setGenerated(importedAction);
-            handleMessage("success", "Your action URL is valid, click generate to view canvas link");
+            handleMessage("success", "Your action URL is valid, Copy Generated  canvas link");
 
         }
 

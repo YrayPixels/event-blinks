@@ -1,4 +1,4 @@
-import { ActionAdapter, ActionContext } from "@dialectlabs/blinks";
+import { ActionAdapter, ActionAdapterMetadata, ActionContext, BlockchainIds } from "@dialectlabs/blinks";
 import { CanvasClient } from "@dscvr-one/canvas-client-sdk";
 import {
   PublicKey,
@@ -147,4 +147,10 @@ export class CanvasAdapter implements ActionAdapter {
       console.error("Transaction confirmation error:", error);
     }
   };
+
+  get metadata(): ActionAdapterMetadata {
+    return {
+      supportedBlockchainIds: [BlockchainIds.SOLANA_MAINNET],
+    };
+  }
 }

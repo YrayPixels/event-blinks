@@ -2,20 +2,16 @@
 import React, { useState, useEffect, useRef } from 'react'
 import '@dialectlabs/blinks/index.css';
 import '../blink.css';
-import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
 
-import { Action, Blink, ActionsRegistry, useAction, useActionsRegistryInterval } from "@dialectlabs/blinks";
+import { Action, Blink, useActionsRegistryInterval } from "@dialectlabs/blinks";
 
 import { Connection, clusterApiUrl } from '@solana/web3.js';
 import { useActionSolanaWalletAdapter } from "@dialectlabs/blinks/hooks/solana"
 
 
 const BlinksWrapper = () => {
-    const [_, setIsInIframe] = useState(false);
-    const [websiteUrl, setWebsiteUrl] = useState("");
     const [websiteText, setWebsiteText] = useState("");
     const containerRef = useRef<HTMLDivElement>(null);
-    const canvasClientRef = useRef<CanvasClient | undefined>();
 
     const [action, setAction] = useState<Action | undefined>();
     const connection = new Connection(clusterApiUrl('mainnet-beta'));

@@ -45,9 +45,10 @@ const BlinksWrapper = () => {
     }, [])
 
 
-    function copyClip(text: string) {
+    async function copyClip(text: string) {
         if (isSetFrame) {
-            canvasClientRef?.current?.copyToClipboard(text);
+            let textCopied = await canvasClientRef?.current?.copyToClipboard(text);
+            console.log(textCopied);
         } else {
             navigator.clipboard.writeText(text);
         }

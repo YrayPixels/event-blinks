@@ -2,40 +2,38 @@
 import React, { useState, useEffect, useRef } from 'react'
 import '@dialectlabs/blinks/index.css';
 import '../blink.css';
-import { CanvasAdapter, isIframe } from '../utils/hooks/canvas-adapter';
 import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
-import { Action, ActionContainer } from '@dialectlabs/blinks';
+
+import { Action, Blink, ActionsRegistry, useAction, useActionsRegistryInterval } from "@dialectlabs/blinks";
+
+import { Connection, clusterApiUrl } from '@solana/web3.js';
+import { useActionSolanaWalletAdapter } from "@dialectlabs/blinks/hooks/solana"
 
 
 const BlinksWrapper = () => {
-    const [action, setAction] = useState<Action | null>(null);
     const [_, setIsInIframe] = useState(false);
     const [websiteUrl, setWebsiteUrl] = useState("");
     const [websiteText, setWebsiteText] = useState("");
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasClientRef = useRef<CanvasClient | undefined>();
 
-    useEffect(() => {
-        const iframe = isIframe();
-        if (iframe) {
-            canvasClientRef.current = new CanvasClient();
-        };
+    const [action, setAction] = useState<Action | undefined>();
+    const connection = new Connection(clusterApiUrl('mainnet-beta'));
+    const { adapter } = useActionSolanaWalletAdapter(connection);
+    const { isRegistryLoaded } = useActionsRegistryInterval();
 
-        setIsInIframe(iframe);
-        const adapter = iframe ? new CanvasAdapter() : undefined;
+
+    useEffect(() => {
 
         const fetchAction = async () => {
             const url = new URL(window.location.href);
 
-            const actionParam = url.searchParams.get('action');
+            const actionParam = url.searchParams.get('action') ?? "https://www.quick-blinks.xyz/api/events/create";
 
             if (actionParam) {
                 try {
                     const actionUrl = new URL(actionParam);
-
-                    setWebsiteUrl(actionUrl.toString());
-                    setWebsiteText(actionUrl.host);
-
+                    setWebsiteText(actionUrl.hostname)
                     const action = await Action.fetch(
                         actionParam,
                         adapter
@@ -49,29 +47,7 @@ const BlinksWrapper = () => {
             }
         };
         fetchAction();
-
-        const resizeObserver = new ResizeObserver((_) => {
-            canvasClientRef?.current?.resize();
-        });
-
-        if (containerRef.current) {
-            resizeObserver.observe(containerRef.current);
-        }
-
-        return () => {
-            if (containerRef.current) {
-                resizeObserver.unobserve(containerRef.current);
-            }
-        };
     }, []);
-
-    const exampleCallbacks = {
-        onActionMount: (action: any, url: any, actionState: any) => {
-            console.log("Action mounted:", action, url, actionState);
-        },
-    };
-
-    const exampleSecurityLevel = "only-trusted";
 
     const containerStyle = {
         maxWidth: '450px',
@@ -79,17 +55,11 @@ const BlinksWrapper = () => {
         width: '100%'
     };
 
+
     return (
         <div ref={containerRef} style={containerStyle}>
-            {action && (
-                <ActionContainer
-                    action={action}
-                    websiteUrl={websiteUrl}
-                    websiteText={websiteText}
-                    callbacks={exampleCallbacks}
-                    securityLevel={exampleSecurityLevel}
-                    stylePreset="x-dark"
-                />
+            {isRegistryLoaded && action && (
+                <Blink stylePreset='x-dark' action={action} websiteText={websiteText} />
             )}
         </div>
     )

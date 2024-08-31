@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./../globals.css";
 import "./../style.css";
+import AppWalletProvider from "@/components/walletAdapter/AppWalletProvider";
 
 
 export const metadata: Metadata = {
@@ -17,7 +18,12 @@ export default function RootLayout({
     <html lang="en">
       {/* <!-- Indicates that the application is a Canvas --> */}
       <meta name="dscvr:canvas:version" content="vNext" />
-      <body>{children}</body>
+      <body>
+        <AppWalletProvider>
+          {children}
+        </AppWalletProvider>
+
+      </body>
       {/* {children} */}
     </html>
   );

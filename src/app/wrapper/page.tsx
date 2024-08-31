@@ -160,7 +160,7 @@ const BlinksWrapper = () => {
                 <h1 className='sm:text-[16px] text-center text-[20px] md:text-[40px]'>Import your existing blinks with a click!</h1>
                 <input onChange={(event) => {
                     setImportedAction(event.target.value)
-                }} placeholder='paste your action get url' className='p-2 text-center border-white w-8/12  border rounded-xl  bg-black/10' />
+                }} value={importedAction} placeholder='paste your action get url' className='p-2 text-center border-white w-8/12  border rounded-xl  bg-black/10' />
                 <div className='flex flex-row gap-x-2'>
                     <button onClick={() => testAction()} className='bg-white  w-[100px] hover:bg-white/50 hover:text-white text-black p-2 shadow-lg rounded-xl'>
                         Generate
@@ -168,9 +168,9 @@ const BlinksWrapper = () => {
                 </div>
 
 
-                {generatedAction != '' && <div className='w-screen flex flex-row space-y-4 justify-center items-center'>
-                    <div className='flex gap-x-4'>
-                        <a className='text-wrap w-[300px] overflow-hidden' href={generatedAction}>{generatedAction}</a>
+                {generatedAction != '' && <div className='w-10/12 flex flex-row space-y-4 justify-center items-center'>
+                    <div className='w-10/12'>
+                        <a className='text-wrap text-center w-[300px] overflow-hidden' href={generatedAction}>{generatedAction}</a>
                         {/* <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' /> */}
                     </div>
                 </div>

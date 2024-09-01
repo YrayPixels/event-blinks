@@ -10,6 +10,7 @@ import { useActionSolanaWalletAdapter } from "@dialectlabs/blinks/hooks/solana"
 import {
     transact,
 } from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
+import { CanvasAdapter } from '../utils/hooks/canvas-adapter';
 
 
 const BlinksWrapper = () => {
@@ -17,8 +18,7 @@ const BlinksWrapper = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const [action, setAction] = useState<Action | undefined>();
-    const connection = new Connection(clusterApiUrl('mainnet-beta'));
-    const { adapter } = useActionSolanaWalletAdapter(connection);
+    const adapter: any = CanvasAdapter
     const { isRegistryLoaded } = useActionsRegistryInterval();
 
     useEffect(() => {
@@ -41,10 +41,8 @@ const BlinksWrapper = () => {
 
     }, [])
     useEffect(() => {
-
         const fetchAction = async () => {
             const url = new URL(window.location.href);
-
             const actionParam = url.searchParams.get('action') ?? "https://www.quick-blinks.xyz/api/events/create";
 
             if (actionParam) {
@@ -69,6 +67,7 @@ const BlinksWrapper = () => {
     const containerStyle = {
         maxWidth: '450px',
         margin: '0 auto',
+        padding: "10px",
         width: '100%'
     };
 
@@ -77,7 +76,7 @@ const BlinksWrapper = () => {
         <div ref={containerRef} style={containerStyle}>
             {isRegistryLoaded && action && (
                 <>
-                    {/* <div><WalletConnectButton /></div> */}
+                    <a href="solflare://connect">Connect</a>
                     <Blink stylePreset='x-dark' action={action} websiteText={websiteText} />
                 </>
             )}

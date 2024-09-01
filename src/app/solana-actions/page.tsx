@@ -7,9 +7,6 @@ import { Action, Blink, useActionsRegistryInterval } from "@dialectlabs/blinks";
 
 import { Connection, clusterApiUrl } from '@solana/web3.js';
 import { useActionSolanaWalletAdapter } from "@dialectlabs/blinks/hooks/solana"
-import { WalletConnectButton } from '@solana/wallet-adapter-react-ui';
-
-import * as Web3MobileWallet from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
 import {
     transact,
 } from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
@@ -26,21 +23,21 @@ const BlinksWrapper = () => {
 
     useEffect(() => {
         // console.log(Web3MobileWallet);
-        (async () => {
-            const result = await transact(async (wallet: any) => {
-                const authResult = wallet.authorize({
-                    chain: 'solana:devnet',
-                    identity: {
-                        name: 'Example dApp',
-                        uri: 'https://yourdapp.com',
-                        icon: "favicon.ico", // Resolves to https://yourdapp.com/favicon.ico
-                    },
-                })
-                return authResult;
-            });
+        // (async () => {
+        //     const result = await transact(async (wallet: any) => {
+        //         const authResult = wallet.authorize({
+        //             chain: 'solana:devnet',
+        //             identity: {
+        //                 name: 'Example dApp',
+        //                 uri: 'https://yourdapp.com',
+        //                 icon: "favicon.ico", // Resolves to https://yourdapp.com/favicon.ico
+        //             },
+        //         })
+        //         return authResult;
+        //     });
 
-            console.log(result);
-        })()
+        //     console.log(result);
+        // })()
 
     }, [])
     useEffect(() => {

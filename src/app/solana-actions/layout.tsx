@@ -19,9 +19,9 @@ export default function RootLayout({
       {/* <!-- Indicates that the application is a Canvas --> */}
       <meta name="dscvr:canvas:version" content="vNext" />
       <body>
-        <AppWalletProvider>
-          {children}
-        </AppWalletProvider>
+        {/* <AppWalletProvider> */}
+        {children}
+        {/* </AppWalletProvider> */}
 
       </body>
       {/* {children} */}

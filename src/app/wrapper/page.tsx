@@ -47,6 +47,7 @@ const BlinksWrapper = () => {
 
     async function copyClip(text: string) {
         if (isSetFrame) {
+
             let textCopied = await canvasClientRef?.current?.copyToClipboard(text);
             console.log(textCopied);
         } else {
@@ -171,7 +172,7 @@ const BlinksWrapper = () => {
                 {generatedAction != '' && <div className='w-10/12 flex flex-row space-y-4 justify-center items-center'>
                     <div className='w-10/12'>
                         <a className='text-wrap text-center w-[300px] overflow-hidden' href={generatedAction}>{generatedAction}</a>
-                        {/* <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' /> */}
+                        <CopyAll onClick={() => copyClip(generatedAction)} className='text-[18px] cursor-pointer -top-5' />
                     </div>
                 </div>
                 }

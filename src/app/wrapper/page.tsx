@@ -15,6 +15,8 @@ const BlinksWrapper = () => {
     const [importedAction, setImportedAction] = useState('')
     const [generatedAction, setGeneratedAction] = useState('');
     const canvasClientRef = useRef<CanvasClient | undefined>();
+    const [canvasClient, setCanvasClient] = useState<CanvasClient | null>(null);
+
     const [isSetFrame, setIsInIframe] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const [notify, setNotify] = useState({
@@ -25,7 +27,10 @@ const BlinksWrapper = () => {
 
     useEffect(() => {
         if (iframe) {
-            canvasClientRef.current = new CanvasClient();
+            let client = new CanvasClient();
+            canvasClientRef.current = client;
+            setCanvasClient(client);
+            console.log('Canvas Client Loaded')
         };
         setIsInIframe(iframe);
 
@@ -47,8 +52,9 @@ const BlinksWrapper = () => {
 
     async function copyClip(text: string) {
         if (isSetFrame) {
-
-            let textCopied = await canvasClientRef?.current?.copyToClipboard(text);
+            await canvasClient?.ready();
+            console.log("CanvasClient is ready");
+            let textCopied = await canvasClient?.copyToClipboard(text)
             console.log(textCopied);
         } else {
             navigator.clipboard.writeText(text);

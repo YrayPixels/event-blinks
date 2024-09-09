@@ -62,14 +62,13 @@ const BlinksWrapper = () => {
         handleMessage("success", "Text copied successfully")
     }
 
-
     const testAction = () => {
         if (importedAction == "") {
             handleMessage("error", "Please Provide a Valid Action URL");
             return;
         }
 
-        if (importedAction.includes('dial.to')) {
+        if (importedAction.includes('https://dial.to/')) {
             //extract 
             let actionurl = extractUrl(importedAction);
             if (!actionurl) {
@@ -88,7 +87,6 @@ const BlinksWrapper = () => {
 
 
     }
-
 
     function extractUrl(input: string) {
         const regex = /solana-action:(https?:\/\/[^\s]+)/;

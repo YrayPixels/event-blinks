@@ -11,7 +11,7 @@ export const GET = async (req: Request) => {
         const url = new URL(req.url);
 
         const params = new URLSearchParams(url.search);
-        const questionId = params.get('question');
+        const questionId = params.get('question');//Story
 
         if (!questionId) {
             const error: ActionError = {
@@ -37,8 +37,8 @@ export const GET = async (req: Request) => {
 
         const payload = {
             icon: `${process.env.NEXT_PUBLIC_HOST_URL}/dscvr.png`,
-            title: "Daily DSCVR Quiz",
-            description: `\n Question ${questionId}: ${quiz.question}`,
+            title: "Daily DSCVR Quiz", //{story.title}
+            description: `\n Question ${questionId}: ${quiz.question}`, //{story.chapter.slice(0, 30)} ...
             links: {
                 actions: [
                     {
@@ -80,9 +80,9 @@ export const OPTIONS = GET;
 export const POST = async (req: Request) => {
     try {
 
-        const url = new URL(req.url);
-        const params = new URLSearchParams(url.search);
-        const questionId = params.get('question');
+        const url = new URL(req.url);//Got the url
+        const params = new URLSearchParams(url.search); //params
+        const questionId = params.get('question'); //question id
 
         if (!questionId) {
             const error: ActionError = {
